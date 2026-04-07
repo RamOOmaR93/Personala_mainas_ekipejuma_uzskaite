@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "PmeuUzskaitesSistemaApplication",
+            "request": "launch",
+            "mainClass": "lv.pmeu.pmeu_sistema.PmeuUzskaitesSistemaApplication",
+            "projectName": "pmeu-sistema"
+        },
+        {
+            "type": "java",
+            "request": "launch",
+            "name": "Launch JavaFX App (Correct Path)",
+            "mainClass": "javagame.Main",
+            "vmArgs": "--module-path C:\\Users\\Raimonds\\Desktop\\javafx-sdk-23.0.1\\lib --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
