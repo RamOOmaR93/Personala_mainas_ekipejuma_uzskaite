@@ -9,4 +9,6 @@ import lv.pmeu.pmeu_sistema.equipment.model.EquipmentAssignment;
 public interface EquipmentAssignmentRepository extends JpaRepository<EquipmentAssignment, Long> {
 
     List<EquipmentAssignment> findByUserId(Long userId);
+
+    boolean existsByUserIdAndEquipmentItemIdAndActive(Long userId, Long equipmentItemId, boolean active);
 }

@@ -2,6 +2,7 @@ package lv.pmeu.pmeu_sistema.equipment.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,49 +12,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lv.pmeu.pmeu_sistema.equipment.dto.EquipmentAssignmentRequest;
 import lv.pmeu.pmeu_sistema.equipment.model.EquipmentAssignment;
-import lv.pmeu.pmeu_sistema.equipment.model.EquipmentItem;
-import lv.pmeu.pmeu_sistema.equipment.repo.EquipmentAssignmentRepository;
-import lv.pmeu.pmeu_sistema.equipment.repo.EquipmentItemRepository;
-import lv.pmeu.pmeu_sistema.user.model.User;
-import lv.pmeu.pmeu_sistema.user.repo.UserRepository;
+import lv.pmeu.pmeu_sistema.equipment.service.IEquipmentAssignmentService;
+
+
 
 @RestController
 @RequestMapping("/users")
 public class EquipmentAssignmentController {
 
-    private final EquipmentAssignmentRepository equipmentAssignmentRepository;
-    private final UserRepository userRepository;
-    private final EquipmentItemRepository equipmentItemRepository;
+    
+    private final IEquipmentAssignmentService equipmentAssignmentService;
 
-   public EquipmentAssignmentController(EquipmentAssignmentRepository equipmentAssignmentRepository,
-                                        UserRepository userRepository, EquipmentItemRepository equipmentItemRepository) {
-        this.equipmentAssignmentRepository = equipmentAssignmentRepository;
-        this.userRepository = userRepository;
-        this.equipmentItemRepository = equipmentItemRepository;
+    public EquipmentAssignmentController(IEquipmentAssignmentService equipmentAssignmentService) {
+        this.equipmentAssignmentService = equipmentAssignmentService;
     }
 
     @GetMapping("/{userId}/equipment")
-    public List<EquipmentAssignment> getUserEquipment(@PathVariable Long userId) {
-        return equipmentAssignmentRepository.findByUserId(userId);
+    public List<EquipmentAssignment> getUserEquipment(@PathVariable Long userId) throws Exception {
+        return equipmentAssignmentService.getUserEquipment(userId);
     }
 
 
     @PostMapping("/assignments")
-    public EquipmentAssignment assignEquipment(@RequestBody EquipmentAssignmentRequest request) {
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        EquipmentItem item = equipmentItemRepository.findById(request.getEquipmentItemId())
-            .orElseThrow(() -> new RuntimeException("Equipment item not found"));
-
-        EquipmentAssignment assignment = new EquipmentAssignment();
-        assignment.setIssuedDate(request.getIssuedDate());
-        assignment.setNotes(request.getNotes());
-        assignment.setActive(request.isActive());
-        assignment.setUser(user);
-        assignment.setEquipmentItem(item);
-
-        return equipmentAssignmentRepository.save(assignment);
+    public ResponseEntity<?> assignEquipment(@RequestBody EquipmentAssignmentRequest request) {
+        try {
+            return ResponseEntity.ok(equipmentAssignmentService.assignEquipment(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
-
 }
