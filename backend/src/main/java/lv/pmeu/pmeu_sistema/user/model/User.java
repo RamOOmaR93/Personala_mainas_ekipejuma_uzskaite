@@ -1,4 +1,4 @@
-package lv.pmeu.pmeu_sistema.entity;
+package lv.pmeu.pmeu_sistema.user.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,11 +14,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EquipmentItem {
+
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
+    private String username;
+    private String password;
+    private String role;
+    private boolean active;
+    private String firstName;
+    private String lastName;
+    private String personalCode;
+    private String phoneNumber;
 }

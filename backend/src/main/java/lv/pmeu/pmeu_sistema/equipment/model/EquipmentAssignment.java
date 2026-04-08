@@ -1,4 +1,4 @@
-package lv.pmeu.pmeu_sistema.entity;
+package lv.pmeu.pmeu_sistema.equipment.model;
 
 import java.time.LocalDate;
 
@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lv.pmeu.pmeu_sistema.user.model.User;
 
 @Entity
 @Getter

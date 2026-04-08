@@ -1,4 +1,4 @@
-package lv.pmeu.pmeu_sistema.entity;
+package lv.pmeu.pmeu_sistema.shift.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
