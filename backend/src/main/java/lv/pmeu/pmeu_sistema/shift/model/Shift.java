@@ -29,7 +29,7 @@ public class Shift {
 
     private LocalDateTime endTime;
 
-    private String status;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
