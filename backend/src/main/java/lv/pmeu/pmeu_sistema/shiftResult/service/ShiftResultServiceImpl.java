@@ -1,5 +1,6 @@
 package lv.pmeu.pmeu_sistema.shiftResult.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import lv.pmeu.pmeu_sistema.shift.model.Shift;
 import lv.pmeu.pmeu_sistema.shift.repo.ShiftRepository;
 import lv.pmeu.pmeu_sistema.shiftResult.dto.ShiftResultRequestDto;
+import lv.pmeu.pmeu_sistema.shiftResult.dto.ShiftResultSummaryDto;
 import lv.pmeu.pmeu_sistema.shiftResult.model.ShiftResult;
 import lv.pmeu.pmeu_sistema.shiftResult.repo.ShiftResultRepository;
 
@@ -60,4 +62,42 @@ public class ShiftResultServiceImpl implements IShiftResultService {
     public List<ShiftResult> getResultsByShiftId(Long shiftId) throws Exception {
         return shiftResultRepository.findByShiftId(shiftId);
     }
+
+    @Override
+    public List<ShiftResultSummaryDto> getShiftSummary(Long shiftId) throws Exception {
+        List<ShiftResult> results = shiftResultRepository.findByShiftId(shiftId);
+
+        return results.stream()
+                .collect(java.util.stream.Collectors.groupingBy(
+                        ShiftResult::getCategory,
+                        java.util.stream.Collectors.summingInt(ShiftResult::getAmount)
+                ))
+                .entrySet()
+                .stream()
+                .map(entry -> new ShiftResultSummaryDto(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+    @Override
+    public List<ShiftResultSummaryDto> getSummaryByShiftStartDate(LocalDate date) throws Exception {
+        List<Shift> shifts = shiftRepository.findByStartTimeBetween(
+                date.atStartOfDay(),
+                date.plusDays(1).atStartOfDay()
+        );
+
+        List<ShiftResult> allResults = shifts.stream()
+                .flatMap(shift -> shiftResultRepository.findByShiftId(shift.getId()).stream())
+                .toList();
+
+        return allResults.stream()
+                .collect(java.util.stream.Collectors.groupingBy(
+                        ShiftResult::getCategory,
+                        java.util.stream.Collectors.summingInt(ShiftResult::getAmount)
+                ))
+                .entrySet()
+                .stream()
+                .map(entry -> new ShiftResultSummaryDto(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
 }
