@@ -1,23 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import LoginPage from "./login/LoginPage";
+import HomePage from "./homePage/HomePage";
+import CreateShiftPage from "./createShift/CreateShiftPage";
+import AddResultPage from "./addResult/AddResultPage";
 
 function App() {
+  const [loggedInUser, setLoggedInUser] = useState("");
+  const [currentPage, setCurrentPage] = useState("login");
+  const [currentShift, setCurrentShift] = useState(null);
+
+  const handleLogin = (username) => {
+    setLoggedInUser(username);
+    setCurrentPage("home");
+  };
+
+  const goToCreateShift = () => {
+    setCurrentPage("createShift");
+  };
+
+  const handleShiftCreated = (shift) => {
+    setCurrentShift(shift);
+    setCurrentPage("addResult");
+  };
+
+  const handleOpenShift = (shift) => {
+    setCurrentShift(shift);
+    setCurrentPage("addResult");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {!loggedInUser ? (
+        <LoginPage onLogin={handleLogin} />
+      ) : currentPage === "home" ? (
+        <HomePage
+          username={loggedInUser}
+          onStartShift={goToCreateShift}
+          onOpenShift={handleOpenShift}
+        />
+      ) : currentPage === "createShift" ? (
+        <CreateShiftPage onShiftCreated={handleShiftCreated} />
+      ) : (
+        <AddResultPage
+          shift={currentShift}
+          onBackToHome={() => setCurrentPage("home")}
+        />
+      )}
     </div>
   );
 }
