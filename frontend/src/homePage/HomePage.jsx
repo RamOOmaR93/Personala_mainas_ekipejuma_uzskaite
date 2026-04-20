@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-function HomePage({ username, onStartShift, onOpenShift }) {
+function HomePage({ user, onStartShift, onOpenShift, onLogout }) {
     const [shifts, setShifts] = useState([]);
     const [date, setDate] = useState(new Date());
     const [selectedShift, setSelectedShift] = useState(null); //Kad lietotājs izvēlas datumu, šeit tiks saglabāta atbilstošā maiņa
@@ -20,7 +20,9 @@ function HomePage({ username, onStartShift, onOpenShift }) {
 
 
   useEffect(() => {
-    fetch("http://localhost:8080/shifts/user/3")
+    fetch(`http://localhost:8080/shifts/user/${user.id}`, {
+      credentials: "include"
+    })
         .then((res) => res.json())
         .then((data) => {
             const sorted = data.sort((a, b) =>
@@ -60,7 +62,8 @@ function HomePage({ username, onStartShift, onOpenShift }) {
   return (
     <div style={{ padding: "20px" }}>
       <h2>Sākumlapa</h2>
-      <p>Sveiks, {username}</p>
+      <p>Sveiks, {user.username}</p>
+      <button onClick={onLogout}>Izlogoties</button>
 
         <button onClick={onStartShift} disabled={hasTodayShift}>
             Sākt maiņu
@@ -96,7 +99,9 @@ function HomePage({ username, onStartShift, onOpenShift }) {
           setSelectedShift(foundShift || null);
 
           if (foundShift) {
-            fetch(`http://localhost:8080/shift-results/shift/${foundShift.id}/summary`)
+            fetch(`http://localhost:8080/shift-results/shift/${foundShift.id}/summary`, {
+              credentials: "include"
+            })
               .then((res) => res.json())
               .then((data) => setSelectedShiftSummary(data))
               .catch((err) => console.error(err));

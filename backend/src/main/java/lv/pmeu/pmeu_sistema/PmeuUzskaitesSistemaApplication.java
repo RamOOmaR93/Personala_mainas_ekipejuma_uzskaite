@@ -27,7 +27,9 @@ public class PmeuUzskaitesSistemaApplication {
     CommandLineRunner testData(EquipmentItemRepository equipmentItemRepo, 
                                 UserRepository userRepo, 
                                 ShiftRepository shiftRepo, 
-                                ShiftResultRepository shiftResultRepo) {
+                                ShiftResultRepository shiftResultRepo,
+                                org.springframework.security.crypto.password.PasswordEncoder passwordEncoder){
+
         return args -> {
 
             if (equipmentItemRepo.count() == 0) {
@@ -70,34 +72,34 @@ public class PmeuUzskaitesSistemaApplication {
             }
 
             if (userRepo.count() == 0) {
-                userRepo.save(new User(null, "prieksnieks1", "test123", "PRIEKSNIEKS", true,
+                userRepo.save(new User(null, "prieksnieks1", passwordEncoder.encode("test123"), "PRIEKSNIEKS", true,
                         "Jānis", "Vadītājs", "111111-11111", "20000001"));
 
-                userRepo.save(new User(null, "vietnieks1", "test123", "VIETNIEKS", true,
+                userRepo.save(new User(null, "vietnieks1", passwordEncoder.encode("test123"), "VIETNIEKS", true,
                         "Andris", "Vietnieks", "222222-22222", "20000002"));
 
-                userRepo.save(new User(null, "darbinieks1", "test123", "DARBINIEKS", true,
+                userRepo.save(new User(null, "darbinieks1", passwordEncoder.encode("test123"), "DARBINIEKS", true,
                         "Pēteris", "Ozols", "333333-33333", "20000003"));
 
-                userRepo.save(new User(null, "darbinieks2", "test123", "DARBINIEKS", true,
+                userRepo.save(new User(null, "darbinieks2", passwordEncoder.encode("test123"), "DARBINIEKS", true,
                         "Mārtiņš", "Bērziņš", "444444-44444", "20000004"));
 
-                userRepo.save(new User(null, "darbinieks3", "test123", "DARBINIEKS", true,
+                userRepo.save(new User(null, "darbinieks3", passwordEncoder.encode("test123"), "DARBINIEKS", true,
                         "Edgars", "Liepa", "555555-55555", "20000005"));
 
-                userRepo.save(new User(null, "darbinieks4", "test123", "DARBINIEKS", true,
+                userRepo.save(new User(null, "darbinieks4", passwordEncoder.encode("test123"), "DARBINIEKS", true,
                         "Kaspars", "Kalniņš", "666666-66666", "20000006"));
 
-                userRepo.save(new User(null, "darbinieks5", "test123", "DARBINIEKS", true,
+                userRepo.save(new User(null, "darbinieks5", passwordEncoder.encode("test123"), "DARBINIEKS", true,
                         "Artūrs", "Krūmiņš", "777777-77777", "20000007"));
 
-                userRepo.save(new User(null, "darbinieks6", "test123", "DARBINIEKS", true,
+                userRepo.save(new User(null, "darbinieks6", passwordEncoder.encode("test123"), "DARBINIEKS", true,
                         "Rihards", "Eglītis", "888888-88888", "20000008"));
 
-                userRepo.save(new User(null, "darbinieks7", "test123", "DARBINIEKS", true,
+                userRepo.save(new User(null, "darbinieks7", passwordEncoder.encode("test123"), "DARBINIEKS", true,
                         "Toms", "Avotiņš", "999999-99999", "20000009"));
 
-                userRepo.save(new User(null, "darbinieks8", "test123", "DARBINIEKS", true,
+                userRepo.save(new User(null, "darbinieks8", passwordEncoder.encode("test123"), "DARBINIEKS", true,
                         "Mikus", "Zariņš", "101010-10101", "20000010"));
             }
 

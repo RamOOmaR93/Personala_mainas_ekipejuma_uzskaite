@@ -2,7 +2,7 @@ import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-function ManagerHomePage() {
+function ManagerHomePage({ onLogout }) {
   const [date, setDate] = useState(new Date());
   const [summary, setSummary] = useState([]);
   const [dayShifts, setDayShifts] = useState([]);
@@ -22,8 +22,9 @@ function ManagerHomePage() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Priekšnieka sākumlapa</h2>
-      <p>Šeit būs pieejamas atskaites un darbinieku maiņu pārskats.</p>
+      <h2>Sveiks Priekšniek</h2>
+      <button onClick={onLogout}>Izlogoties</button>
+      <p>ATSKAITĒM/PĀRSKATS</p>
 
       <h3 style={{ marginTop: "20px" }}>Izvēlies datumu</h3>
 
@@ -33,18 +34,24 @@ function ManagerHomePage() {
 
                 const formattedDate = formatLocalDate(selectedDate);
 
-                fetch(`http://localhost:8080/shift-results/summary/by-shift-date?date=${formattedDate}`)
+                fetch(`http://localhost:8080/shift-results/summary/by-shift-date?date=${formattedDate}`, {
+                    credentials: "include"
+                })
                 .then((res) => res.json())
                 .then((data) => setSummary(data))
                 .catch((err) => console.error(err));
 
-                fetch(`http://localhost:8080/shifts/by-date?date=${formattedDate}`)
+                fetch(`http://localhost:8080/shifts/by-date?date=${formattedDate}`, {
+                    credentials: "include"
+                })
                 .then((res) => res.json())
                 .then((data) => {
                     setDayShifts(data);
 
                     data.forEach((shift) => {
-                        fetch(`http://localhost:8080/shift-results/shift/${shift.shiftId}/summary`)
+                        fetch(`http://localhost:8080/shift-results/shift/${shift.shiftId}/summary`, {
+                            credentials: "include"
+                        })
                         .then((res) => res.json())
                         .then((summaryData) => {
                             setEmployeeSummaries(prev => ({

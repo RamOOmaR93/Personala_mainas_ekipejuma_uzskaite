@@ -8,14 +8,18 @@ function AddResultPage({ shift, onBackToHome }) {
   const [summary, setSummary] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/shift-results/shift/${shift.id}`)
+    fetch(`http://localhost:8080/shift-results/shift/${shift.id}`, {
+      credentials: "include"
+    })
       .then((res) => res.json())
       .then((data) => setResults(data))
       .catch((err) => console.error(err));
   }, [shift.id]);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/shift-results/shift/${shift.id}/summary`)
+    fetch(`http://localhost:8080/shift-results/shift/${shift.id}/summary`, {
+      credentials: "include"
+    })
       .then((res) => res.json())
       .then((data) => setSummary(data))
       .catch((err) => console.error(err));
@@ -50,6 +54,7 @@ function AddResultPage({ shift, onBackToHome }) {
         headers: {
           "Content-Type": "application/json"
         },
+        credentials: "include",
         body: JSON.stringify(resultData)
       });
 
