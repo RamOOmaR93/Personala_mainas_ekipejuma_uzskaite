@@ -1,7 +1,23 @@
 import { useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 function HomePage({ username, onStartShift, onOpenShift }) {
     const [shifts, setShifts] = useState([]);
+    const [date, setDate] = useState(new Date());
+    const [selectedShift, setSelectedShift] = useState(null); //Kad lietotājs izvēlas datumu, šeit tiks saglabāta atbilstošā maiņa
+    const [selectedShiftSummary, setSelectedShiftSummary] = useState([]);
+
+
+
+    const formatLocalDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+
 
   useEffect(() => {
     fetch("http://localhost:8080/shifts/user/3")
@@ -15,16 +31,31 @@ function HomePage({ username, onStartShift, onOpenShift }) {
         .catch((err) => console.error(err));
     }, []);
 
-    const today = new Date().toISOString().split("T")[0];
+    const today = formatLocalDate(new Date()); //ņem datumu pēc esošās laika zonas, lai salīdzināšana būtu korekta
 
-    const activeShift = shifts.find(shift => 
-        shift.startTime.startsWith(today)
+    const activeShift = shifts.find(shift =>
+      shift.startTime.split("T")[0] === today
     );
 
 
     const hasTodayShift = shifts.some(shift =>
-        shift.startTime.startsWith(today)
+      shift.startTime.split("T")[0] === today
     );
+
+
+    const shiftDates = shifts.map(shift =>
+      shift.startTime.split("T")[0]
+    );
+
+    
+
+   
+  
+
+
+
+
+
 
   return (
     <div style={{ padding: "20px" }}>
@@ -52,28 +83,75 @@ function HomePage({ username, onStartShift, onOpenShift }) {
 
       <h3 style={{ marginTop: "20px" }}>Manas maiņas</h3>
 
-      {shifts.length === 0 ? (
-        <p>Maiņas nav atrastas.</p>
-      ) : (
-        <ul>
-          {shifts.map((shift) => (
-            <li key={shift.id}>
-                <button
-                    onClick={() => onOpenShift(shift)}
-                    style={{
-                        backgroundColor: shift.startTime.startsWith(today) ? "#28a745" : "",
-                        color: shift.startTime.startsWith(today) ? "white" : "",
-                        padding: "5px 10px",
-                        border: "1px solid #ccc",
-                        cursor: "pointer"
-                    }}
-                    >
-                    Maiņa ID: {shift.id} | Sākums: {shift.startTime}
-                </button>
-            </li>
-          ))}
-        </ul>
+
+      <Calendar
+        onChange={(selectedDate) => {
+          setDate(selectedDate);
+
+          const formattedDate = formatLocalDate(selectedDate);
+          const foundShift = shifts.find((shift) =>
+            shift.startTime.split("T")[0] === formattedDate
+          );
+
+          setSelectedShift(foundShift || null);
+
+          if (foundShift) {
+            fetch(`http://localhost:8080/shift-results/shift/${foundShift.id}/summary`)
+              .then((res) => res.json())
+              .then((data) => setSelectedShiftSummary(data))
+              .catch((err) => console.error(err));
+          } else {
+            setSelectedShiftSummary([]);
+          }
+
+        }}
+        value={date}
+        tileClassName={({ date, view }) => {
+          if (view !== "month") return null;
+
+          const formattedDate = formatLocalDate(date);
+
+          if (formattedDate === today && shiftDates.includes(formattedDate)) {
+            return "active-shift-day";
+          }
+
+          if (shiftDates.includes(formattedDate)) {
+            return "past-shift-day";
+          }
+
+          return null;
+        }}
+      />
+
+      {selectedShift && (
+        <div style={{ marginTop: "20px" }}>
+          <h4>Izvēlētā maiņa</h4>
+          <p>Maiņas ID: {selectedShift.id}</p>
+          <p>Sākums: {selectedShift.startTime}</p>
+
+          <h4 style={{ marginTop: "15px" }}>Maiņas kopsavilkums</h4>
+
+          {selectedShiftSummary.length === 0 ? (
+            <p>Kopsavilkums nav pieejams.</p>
+          ) : (
+            <ul>
+              {selectedShiftSummary.map((item, index) => (
+                <li key={index}>
+                  {item.category} | kopā: {item.totalAmount}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <button onClick={() => onOpenShift(selectedShift)}>
+            Atvērt maiņu
+          </button>
+        </div>
       )}
+
+
+
+      
     </div>
   );
 }

@@ -1,9 +1,12 @@
 package lv.pmeu.pmeu_sistema.shift.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import lv.pmeu.pmeu_sistema.shift.dto.ShiftByDateDto;
 import lv.pmeu.pmeu_sistema.shift.dto.ShiftRequestDto;
 import lv.pmeu.pmeu_sistema.shift.model.Shift;
 import lv.pmeu.pmeu_sistema.shift.repo.ShiftRepository;
@@ -60,5 +63,25 @@ public class ShiftServiceImpl implements IShiftService {
     public Shift getShiftById(Long id) throws Exception {
         return shiftRepository.findById(id)
                 .orElseThrow(() -> new Exception("Maiņa netika atrasta"));
+    }
+
+
+    @Override
+        public List<ShiftByDateDto> getShiftsByDate(LocalDate date) {
+
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
+
+        List<Shift> shifts = shiftRepository.findByStartTimeBetween(startOfDay, endOfDay);
+
+        return shifts.stream()
+                .map(shift -> new ShiftByDateDto(
+                        shift.getId(),
+                        shift.getUser().getId(),
+                        shift.getUser().getUsername(),
+                        shift.getUser().getFirstName(),
+                        shift.getUser().getLastName()
+                ))
+                .toList();
     }
 }

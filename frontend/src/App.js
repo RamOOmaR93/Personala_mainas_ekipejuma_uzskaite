@@ -1,8 +1,10 @@
+import "./App.css";
 import { useState } from "react";
 import LoginPage from "./login/LoginPage";
 import HomePage from "./homePage/HomePage";
 import CreateShiftPage from "./createShift/CreateShiftPage";
 import AddResultPage from "./addResult/AddResultPage";
+import ManagerHomePage from "./managerHomePage/ManagerHomePage";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState("");
@@ -27,6 +29,14 @@ function App() {
     setCurrentShift(shift);
     setCurrentPage("addResult");
   };
+
+  /*return (
+    <div>
+      <ManagerHomePage />
+    </div>
+  );*/
+
+
 
   return (
     <div>

@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.react-calendar__tile.active-shift-day {
+  background: #28a745 !important;
+  color: white !important;
+  border-radius: 8px !important;
+}
+
+.react-calendar__tile.past-shift-day {
+  background: #ffd966 !important;
+  color: black !important;
+  border-radius: 8px !important;
+}

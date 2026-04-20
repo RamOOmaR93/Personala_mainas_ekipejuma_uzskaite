@@ -170,7 +170,9 @@ function AddResultPage({ shift, onBackToHome }) {
         >
             Pievienot rezultātu
         </button>
-        <button style={{ marginTop: "10px", marginLeft: "10px" }} onClick={onBackToHome} disabled={!isEditable}>
+        <button 
+          style={{ marginTop: "10px", marginLeft: "10px" }} 
+          onClick={onBackToHome}>
             Atpakaļ uz sākumlapu
         </button>
     </div>
