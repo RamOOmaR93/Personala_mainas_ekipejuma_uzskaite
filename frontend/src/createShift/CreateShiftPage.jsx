@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function CreateShiftPage({ onShiftCreated }) {
+function CreateShiftPage({ user, onShiftCreated }) {
   const [shiftDate, setShiftDate] = useState("");
   const [comment, setComment] = useState("");
 
@@ -17,7 +17,7 @@ function CreateShiftPage({ onShiftCreated }) {
 
   const handleCreateShift = async () => {
     const shiftData = {
-      userId: 3,
+      userId: user.id,
       shiftDate: shiftDate,
       comment: comment
     };
@@ -28,6 +28,7 @@ function CreateShiftPage({ onShiftCreated }) {
         headers: {
           "Content-Type": "application/json"
         },
+        credentials: "include",
         body: JSON.stringify(shiftData)
       });
 

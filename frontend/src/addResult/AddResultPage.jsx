@@ -41,6 +41,21 @@ function AddResultPage({ shift, onBackToHome }) {
 
 
   const handleAddResult = async () => {
+    if (!category) {
+      alert("Lūdzu izvēlies rezultāta kategoriju.");
+      return;
+    }
+
+    if (!amount || Number(amount) <= 0) {
+      alert("Lūdzu ievadi korektu rezultāta daudzumu.");
+      return;
+    }
+
+    if (!entryDate) {
+      alert("Lūdzu izvēlies datumu, kurā rezultāts tika iegūts.");
+      return;
+    }
+
     const resultData = {
       shiftId: shift.id,
       category: category,

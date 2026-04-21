@@ -94,7 +94,10 @@ function App() {
       ) : currentPage === "manager" ? (
         <ManagerHomePage onLogout={handleLogout} />
       ) : currentPage === "createShift" ? (
-        <CreateShiftPage onShiftCreated={handleShiftCreated} />
+        <CreateShiftPage
+          user={loggedInUser}
+          onShiftCreated={handleShiftCreated}
+        />
       ) : (
         <AddResultPage
           shift={currentShift}
