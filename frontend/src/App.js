@@ -7,10 +7,11 @@ import AddResultPage from "./addResult/AddResultPage";
 import ManagerHomePage from "./managerHomePage/ManagerHomePage";
 
 function App() {
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [currentPage, setCurrentPage] = useState("login");
-  const [currentShift, setCurrentShift] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null);// Stores currently logged-in user
+  const [currentPage, setCurrentPage] = useState("login");// Controls which page is currently shown
+  const [currentShift, setCurrentShift] = useState(null);// Stores currently selected or created shift
 
+  // After successful login, store user data and redirect based on user role
   const handleLogin = (userData) => {
     setLoggedInUser(userData);
 
@@ -52,6 +53,7 @@ function App() {
     setCurrentShift(null);
   };
 
+  // On app load, check if user session already exists and restore login state
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -80,6 +82,7 @@ function App() {
 
 
 
+  // Render the correct page based on login status and current page state
   return (
     <div>
       {!loggedInUser ? (

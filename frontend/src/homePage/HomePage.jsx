@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
+import Calendar from "react-calendar";// Import React Calendar component and its default styles
 import "react-calendar/dist/Calendar.css";
 
 function HomePage({ user, onStartShift, onOpenShift, onLogout }) {
@@ -110,6 +110,7 @@ function HomePage({ user, onStartShift, onOpenShift, onLogout }) {
           }
 
         }}
+        // Apply custom calendar styles for active and past shift dates
         value={date}
         tileClassName={({ date, view }) => {
           if (view !== "month") return null;

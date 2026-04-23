@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Calendar from "react-calendar";
+import Calendar from "react-calendar";// Import React Calendar component and its default styles
 import "react-calendar/dist/Calendar.css";
 
 function ManagerHomePage({ onLogout }) {

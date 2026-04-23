@@ -37,12 +37,14 @@
   }
 }
 
+/* Highlight today's active shift date in the calendar */
 .react-calendar__tile.active-shift-day {
   background: #28a745 !important;
   color: white !important;
   border-radius: 8px !important;
 }
 
+/* Highlight past shift dates in the calendar */
 .react-calendar__tile.past-shift-day {
   background: #ffd966 !important;
   color: black !important;
