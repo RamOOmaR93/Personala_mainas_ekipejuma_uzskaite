@@ -79,9 +79,12 @@ public class ShiftController {
         }
     }
 
+    // Return shifts for a selected date
+    // Find shifts that started within the selected day
+    // Build lightweight DTO for manager view
     @GetMapping("/by-date")
     public List<ShiftByDateDto> getShiftsByDate(@RequestParam LocalDate date) {
-        return shiftService.getShiftsByDate(date);
+        return shiftService.getShiftsByDate(date); 
     }
 
 }

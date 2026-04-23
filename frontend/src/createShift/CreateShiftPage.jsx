@@ -15,6 +15,9 @@ function CreateShiftPage({ user, onShiftCreated }) {
   const minDate = formatDate(yesterday);
   const maxDate = formatDate(today);
 
+
+  //USER
+  //Take the logged-in user's ID and include it in the request
   const handleCreateShift = async () => {
     const shiftData = {
       userId: user.id,

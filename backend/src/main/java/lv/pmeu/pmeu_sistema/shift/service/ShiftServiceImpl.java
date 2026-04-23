@@ -38,9 +38,14 @@ public class ShiftServiceImpl implements IShiftService {
             throw new Exception("Maiņas datums nav norādīts");
         }
 
+
+
+        //USER
+        // Find user in database using ID received from frontend
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new Exception("Lietotājs netika atrasts"));
 
+        // Link the shift to the specific user
         Shift shift = new Shift();
         shift.setUser(user);
         shift.setComment(request.getComment());

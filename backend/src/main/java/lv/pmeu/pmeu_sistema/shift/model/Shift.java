@@ -31,6 +31,7 @@ public class Shift {
 
     private String comment;
 
+    // Each shift belongs to one user (many shifts can belong to the same user)
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

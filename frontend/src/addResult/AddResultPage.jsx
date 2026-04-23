@@ -56,13 +56,17 @@ function AddResultPage({ shift, onBackToHome }) {
       return;
     }
 
+    //SHIFT
+    // Prepare shift result data from form inputs before sending it to backend
     const resultData = {
-      shiftId: shift.id,
+      shiftId: shift.id, //Link this result to the currently selected shift
       category: category,
       amount: Number(amount),
       entryDate: entryDate
     };
 
+
+    // Send the new shift result to backend for saving
     try {
       const response = await fetch("http://localhost:8080/shift-results", {
         method: "POST",

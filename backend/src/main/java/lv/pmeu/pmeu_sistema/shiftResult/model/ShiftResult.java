@@ -34,6 +34,7 @@ public class ShiftResult {
 
     private LocalDate entryDate;
 
+    // Many results can belong to one shift
     @ManyToOne
     @JoinColumn(name = "shift_id")
     private Shift shift;
