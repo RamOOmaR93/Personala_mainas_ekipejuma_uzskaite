@@ -30,6 +30,7 @@ public class PmeuUzskaitesSistemaApplication {
                                 ShiftResultRepository shiftResultRepo,
                                 org.springframework.security.crypto.password.PasswordEncoder passwordEncoder){
 
+        // Equipment items are stored in database so they can be managed as separate records
         return args -> {
 
             if (equipmentItemRepo.count() == 0) {
@@ -105,28 +106,43 @@ public class PmeuUzskaitesSistemaApplication {
 
 
 
+            // Automatically inserts test data when the application starts
+
+            // Random generator for creating test data
+            // Get all possible result categories from enum
             Random random = new Random();
             ShiftResultCategory[] categories = ShiftResultCategory.values();
 
+            // Generate sample shifts for test users and random results for those shifts
+
+            // Generate test data only if no shifts exist in database
             if (shiftRepo.count() == 0) {
 
+                // Load all users from database
+                // Filter only users with role "DARBINIEKS"
                 List<User> allUsers = userRepo.findAll();
 
                 List<User> workers = allUsers.stream()
                         .filter(u -> "DARBINIEKS".equals(u.getRole()))
                         .toList();
 
+                // Define date range for generating shifts
                 LocalDate startDate = LocalDate.of(2026, 1, 1);
                 LocalDate endDate = LocalDate.now().plusDays(1);
 
+                // Loop through each day and generate shifts
                 for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
 
+                // Calculate index based on day number
+                // Rotate worker pairs every day
+                // Select two workers for this shift day
                     int dayIndex = (int) (date.toEpochDay() - startDate.toEpochDay());
                     int pairIndex = dayIndex % 4;
 
                     User worker1 = workers.get(pairIndex * 2);
                     User worker2 = workers.get(pairIndex * 2 + 1);
 
+                    // Create and save first shift for the day
                     Shift shift1 = shiftRepo.save(new Shift(
                             null,
                             date.atTime(8, 30),
@@ -135,6 +151,7 @@ public class PmeuUzskaitesSistemaApplication {
                             worker1
                     ));
 
+                    // Generate random result entries for this shift
                     for (int i = 0; i < 2; i++) {
                         ShiftResultCategory category = categories[random.nextInt(categories.length)];
                         int amount = random.nextInt(5) + 1;
@@ -161,13 +178,16 @@ public class PmeuUzskaitesSistemaApplication {
                     ));
 
                     for (int i = 0; i < 2; i++) {
+                        // Pick random result category and amount for this result entry
                         ShiftResultCategory category = categories[random.nextInt(categories.length)];
                         int amount = random.nextInt(5) + 1;
 
+                        // Randomly assign result to shift start date or next day
                         LocalDate entryDate = random.nextBoolean()
                                 ? date
                                 : date.plusDays(1);
 
+                        // Save generated result linked to this shift
                         shiftResultRepo.save(new ShiftResult(
                                 null,
                                 category,
