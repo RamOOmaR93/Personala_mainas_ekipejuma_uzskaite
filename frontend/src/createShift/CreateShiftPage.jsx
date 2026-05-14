@@ -4,6 +4,7 @@ function CreateShiftPage({ user, onShiftCreated }) {
   const [shiftDate, setShiftDate] = useState("");
   const [comment, setComment] = useState("");
 
+  // Allow shift creation only for today or yesterday
   const today = new Date();
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
@@ -12,6 +13,7 @@ function CreateShiftPage({ user, onShiftCreated }) {
     return date.toISOString().split("T")[0];
   };
 
+  // Set minimum and maximum selectable dates for shift creation
   const minDate = formatDate(yesterday);
   const maxDate = formatDate(today);
 
@@ -58,6 +60,7 @@ function CreateShiftPage({ user, onShiftCreated }) {
       <div>
         <label>Datums:</label>
         <br />
+        // Restrict date picker to allowed shift dates
         <input
           type="date"
           value={shiftDate}

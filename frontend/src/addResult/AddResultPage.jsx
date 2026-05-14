@@ -26,8 +26,10 @@ function AddResultPage({ shift, onBackToHome }) {
   }, [shift.id]);
 
 
+  // Get shift start date from selected shift
   const shiftStartDate = shift.startTime.split("T")[0];
 
+  // Allow result entry until the next day after shift start
   const nextDateObject = new Date(shiftStartDate);
   nextDateObject.setDate(nextDateObject.getDate() + 1);
 
@@ -37,6 +39,7 @@ function AddResultPage({ shift, onBackToHome }) {
 
   const today = new Date().toISOString().split("T")[0];
 
+  // Results can be added only while the shift is active
   const isEditable = today >= shiftStartDate && today <= maxEntryDate;
 
 
@@ -139,6 +142,7 @@ function AddResultPage({ shift, onBackToHome }) {
         <br />
         <select 
           value={category}
+          // Disable result form when the shift is no longer editable
           disabled={!isEditable}
           onChange={(e) => setCategory(e.target.value)}
         >
@@ -169,6 +173,7 @@ function AddResultPage({ shift, onBackToHome }) {
         <input
           type="number"
           value={amount}
+          // Disable result form when the shift is no longer editable
           disabled={!isEditable}
           onChange={(e) => setAmount(e.target.value)}
         />
@@ -182,6 +187,7 @@ function AddResultPage({ shift, onBackToHome }) {
           value={entryDate}
           min={shiftStartDate}
           max={maxEntryDate}
+          // Disable result form when the shift is no longer editable
           disabled={!isEditable}
           onChange={(e) => setEntryDate(e.target.value)}
         />
@@ -190,6 +196,7 @@ function AddResultPage({ shift, onBackToHome }) {
         <button 
         style={{ marginTop: "10px" }} 
         onClick={handleAddResult}
+        // Disable result form when the shift is no longer editable
         disabled={!isEditable}
         >
             Pievienot rezultātu
