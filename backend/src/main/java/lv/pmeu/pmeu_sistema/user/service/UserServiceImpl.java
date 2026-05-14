@@ -2,6 +2,7 @@ package lv.pmeu.pmeu_sistema.user.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lv.pmeu.pmeu_sistema.user.model.User;
@@ -11,9 +12,11 @@ import lv.pmeu.pmeu_sistema.user.repo.UserRepository;
 public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -48,6 +51,10 @@ public class UserServiceImpl implements IUserService {
             throw new Exception("Lietotājvārdam jābūt aizpildītam");
         }
 
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new Exception("Lietotājvārds jau eksistē");
+        }
+
         if (user.getPassword() == null || user.getPassword().isBlank()) {
             throw new Exception("Parolei jābūt aizpildītai");
         }
@@ -64,6 +71,8 @@ public class UserServiceImpl implements IUserService {
             throw new Exception("Uzvārdam jābūt aizpildītam");
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password before saving
+
         return userRepository.save(user);
     }
 
@@ -77,8 +86,8 @@ public class UserServiceImpl implements IUserService {
             existingUser.setUsername(user.getUsername());
         }
 
-        if (user.getPassword() != null) {
-            existingUser.setPassword(user.getPassword());
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         if (user.getRole() != null) {

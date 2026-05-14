@@ -64,6 +64,13 @@ public class ShiftResultServiceImpl implements IShiftResultService {
         Shift shift = shiftRepository.findById(request.getShiftId())
                 .orElseThrow(() -> new Exception("Maiņa netika atrasta"));
 
+        LocalDate shiftStartDate = shift.getStartTime().toLocalDate();
+        LocalDate shiftNextDate = shiftStartDate.plusDays(1);
+
+        if (!request.getEntryDate().equals(shiftStartDate) && !request.getEntryDate().equals(shiftNextDate)) {
+            throw new Exception("Rezultāta datums drīkst būt tikai maiņas sākuma diena vai nākamā diena");
+        }
+
         ShiftResult result = new ShiftResult();
         result.setShift(shift); // Link this result to the specific shift
         result.setCategory(request.getCategory()); // Set result details received from frontend

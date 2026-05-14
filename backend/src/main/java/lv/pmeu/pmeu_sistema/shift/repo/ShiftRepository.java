@@ -20,5 +20,9 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
     // This is used for reports that are calculated per shift, not by result entryDate.
     List<Shift> findByUserIdAndStartTimeBetween(Long userId, LocalDateTime start, LocalDateTime end);
 
-    
+    boolean existsByUserIdAndStartTimeBetween(
+            Long userId,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 }

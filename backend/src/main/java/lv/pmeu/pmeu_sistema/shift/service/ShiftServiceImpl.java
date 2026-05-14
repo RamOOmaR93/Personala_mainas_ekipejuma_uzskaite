@@ -39,6 +39,29 @@ public class ShiftServiceImpl implements IShiftService {
         }
 
 
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+
+        if (!request.getShiftDate().equals(today) && !request.getShiftDate().equals(yesterday)) {
+            throw new Exception("Maiņu var izveidot tikai šodienas vai vakardienas datumam");
+        }
+
+
+        LocalDateTime startOfDay = request.getShiftDate().atStartOfDay();
+        LocalDateTime endOfDay = request.getShiftDate().plusDays(1).atStartOfDay();
+
+        boolean shiftAlreadyExists = shiftRepository.existsByUserIdAndStartTimeBetween(
+                request.getUserId(),
+                startOfDay,
+                endOfDay
+        );
+
+        if (shiftAlreadyExists) {
+            throw new Exception("Šim darbiniekam šajā datumā maiņa jau ir izveidota");
+        }
+
+
+
 
         //USER
         // Find user in database using ID received from frontend
