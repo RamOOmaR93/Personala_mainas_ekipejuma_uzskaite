@@ -63,6 +63,12 @@ public class UserServiceImpl implements IUserService {
             throw new Exception("Lomai jābūt aizpildītai");
         }
 
+        if (!user.getRole().equals("DARBINIEKS")
+                && !user.getRole().equals("PRIEKSNIEKS")
+                && !user.getRole().equals("VIETNIEKS")) {
+            throw new Exception("Nepareiza lietotāja loma");
+        }
+
         if (user.getFirstName() == null || user.getFirstName().isBlank()) {
             throw new Exception("Vārdam jābūt aizpildītam");
         }
@@ -90,9 +96,22 @@ public class UserServiceImpl implements IUserService {
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
+
+
+
         if (user.getRole() != null) {
+
+            if (!user.getRole().equals("DARBINIEKS")
+                    && !user.getRole().equals("PRIEKSNIEKS")
+                    && !user.getRole().equals("VIETNIEKS")) {
+                throw new Exception("Nepareiza lietotāja loma");
+            }
+
+
             existingUser.setRole(user.getRole());
         }
+
+
 
         if (user.getFirstName() != null) {
             existingUser.setFirstName(user.getFirstName());
@@ -121,6 +140,11 @@ public class UserServiceImpl implements IUserService {
             throw new Exception("Lietotājs netika atrasts");
         }
 
-        userRepository.deleteById(id);
+        
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception("Lietotājs netika atrasts"));
+
+        user.setActive(false);
+        userRepository.save(user);
     }
 }

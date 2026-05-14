@@ -28,6 +28,20 @@ public class EquipmentAssignmentServiceImpl implements IEquipmentAssignmentServi
 
     @Override
     public EquipmentAssignment assignEquipment(EquipmentAssignmentRequest request) throws Exception {
+
+        if (request == null) {
+            throw new Exception("Ekipējuma piešķiršanas dati nav norādīti");
+        }
+
+        if (request.getUserId() == null) {
+            throw new Exception("Lietotājs nav norādīts");
+        }
+
+        if (request.getEquipmentItemId() == null) {
+            throw new Exception("Ekipējuma vienība nav norādīta");
+        }
+
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new Exception("Lietotājs netika atrasts"));
 
@@ -53,5 +67,7 @@ public class EquipmentAssignmentServiceImpl implements IEquipmentAssignmentServi
     public List<EquipmentAssignment> getUserEquipment(Long userId) throws Exception {
         return equipmentAssignmentRepository.findByUserId(userId);
     }
+
+    
 
 }

@@ -96,7 +96,7 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
-            return ResponseEntity.ok("Lietotājs veiksmīgi izdzēsts");
+            return ResponseEntity.ok("Lietotājs deaktivizēts");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
