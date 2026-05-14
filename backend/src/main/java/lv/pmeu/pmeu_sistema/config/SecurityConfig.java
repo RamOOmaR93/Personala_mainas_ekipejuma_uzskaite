@@ -31,8 +31,13 @@ public class SecurityConfig {
                 .userDetailsService(customUserDetailsService)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        //.anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/users/**").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
+                        .requestMatchers("/equipment-items").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
+                        .requestMatchers("/shift-results/summary/**").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
+                        .requestMatchers("/shifts/by-date").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
+                        .anyRequest().authenticated()
+
+                        //.anyRequest().permitAll()
                 );
 
         return http.build();

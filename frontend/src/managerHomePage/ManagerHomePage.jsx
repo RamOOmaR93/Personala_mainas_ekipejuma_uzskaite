@@ -17,7 +17,8 @@ function ManagerHomePage({ onLogout }) {
 
     // Load all users and filter only employees for dropdown
     useEffect(() => {
-        fetch("http://localhost:8080/users")
+        fetch("http://localhost:8080/users", { 
+            credentials: "include" })
             .then((res) => res.json())
             .then((data) => {
             const onlyWorkers = data.filter(user => user.role === "DARBINIEKS");
@@ -48,7 +49,9 @@ function ManagerHomePage({ onLogout }) {
             return;
         }
 
-        fetch(`http://localhost:8080/shift-results/summary/user-by-period?userId=${selectedUserId}&from=${fromDate}&to=${toDate}`)
+        fetch(`http://localhost:8080/shift-results/summary/user-by-period?userId=${selectedUserId}&from=${fromDate}&to=${toDate}`, {
+            credentials: "include"
+        })
             .then((res) => res.json())
             .then((data) => setEmployeePeriodSummary(data))
             .catch((err) => console.error(err));

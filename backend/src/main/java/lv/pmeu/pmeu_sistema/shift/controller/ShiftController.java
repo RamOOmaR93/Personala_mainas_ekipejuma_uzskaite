@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,9 @@ import lv.pmeu.pmeu_sistema.shift.dto.ShiftDto;
 import lv.pmeu.pmeu_sistema.shift.dto.ShiftRequestDto;
 import lv.pmeu.pmeu_sistema.shift.model.Shift;
 import lv.pmeu.pmeu_sistema.shift.service.IShiftService;
+import lv.pmeu.pmeu_sistema.user.model.User;
+import lv.pmeu.pmeu_sistema.user.repo.UserRepository;
+
 
 
 @RestController
@@ -24,9 +28,11 @@ import lv.pmeu.pmeu_sistema.shift.service.IShiftService;
 public class ShiftController {
 
     private final IShiftService shiftService;
+    private final UserRepository userRepository;
 
-    public ShiftController(IShiftService shiftService) {
+    public ShiftController(IShiftService shiftService, UserRepository userRepository) {
             this.shiftService = shiftService;
+            this.userRepository = userRepository;
         }
 
     private ShiftDto toDto(Shift shift) {
@@ -56,9 +62,24 @@ public class ShiftController {
         }
     }
 
+
+    
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getUserShifts(@PathVariable Long userId) {
+    public ResponseEntity<?> getUserShifts(@PathVariable Long userId, Authentication authentication) {
+         // Check if the authenticated user is requesting their own shifts or has a manager role    
         try {
+            User currentUser = userRepository.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("Lietotājs netika atrasts"));
+
+            boolean isManager = currentUser.getRole().equals("PRIEKSNIEKS")
+                    || currentUser.getRole().equals("VIETNIEKS");
+
+            if (!isManager && !currentUser.getId().equals(userId)) {
+                return ResponseEntity.status(403).body("Nav atļauts skatīt cita darbinieka maiņas");
+            }
+
+
+
             List<ShiftDto> shifts = shiftService.getUserShifts(userId).stream()
                     .map(this::toDto)
                     .toList();
@@ -69,15 +90,36 @@ public class ShiftController {
         }
     }
     
+
+
+
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getShiftById(@PathVariable Long id) {
+    public ResponseEntity<?> getShiftById(@PathVariable Long id, Authentication authentication) {
         try {
+            User currentUser = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Lietotājs netika atrasts"));
+
+
+
             Shift shift = shiftService.getShiftById(id);
+
+            boolean isManager = currentUser.getRole().equals("PRIEKSNIEKS")
+                || currentUser.getRole().equals("VIETNIEKS");
+
+            if (!isManager && !shift.getUser().getId().equals(currentUser.getId())) {
+                return ResponseEntity.status(403).body("Nav atļauts skatīt cita darbinieka maiņu");
+            }
+
+
             return ResponseEntity.ok(toDto(shift));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
+
 
     // Return shifts for a selected date
     // Find shifts that started within the selected day
