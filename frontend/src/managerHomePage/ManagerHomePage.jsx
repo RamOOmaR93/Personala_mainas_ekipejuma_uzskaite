@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Calendar from "react-calendar";// Import React Calendar component and its default styles
 import "react-calendar/dist/Calendar.css";
+import ReportsPage from "../reports/ReportsPage";
+
 
 function ManagerHomePage({ onLogout, setCurrentPage }) {
     const [date, setDate] = useState(new Date());
@@ -22,6 +24,7 @@ function ManagerHomePage({ onLogout, setCurrentPage }) {
     const [equipmentIssuedDate, setEquipmentIssuedDate] = useState("");
     const [equipmentActive, setEquipmentActive] = useState(true);
     const [newEquipmentName, setNewEquipmentName] = useState("");
+    
 
 
 
@@ -101,12 +104,16 @@ function ManagerHomePage({ onLogout, setCurrentPage }) {
                 Ekipējums
             </button>
 
+            <button onClick={() => setManagerSection("reportsPage")}>
+                Atskaites
+            </button>
+
             <button onClick={onLogout}>
                 Izlogoties
             </button>
         </div>
       
-      {managerSection === "reports" && (
+    {managerSection === "reports" && (
       <>
       <p>ATSKAITĒM/PĀRSKATS</p>
 
@@ -263,6 +270,14 @@ function ManagerHomePage({ onLogout, setCurrentPage }) {
 
     </>
          )}
+
+        
+
+
+    {managerSection === "reportsPage" && (
+        <ReportsPage />
+    )}
+
     {managerSection === "employees" && (
         <div>
             <h3>Darbinieki</h3>

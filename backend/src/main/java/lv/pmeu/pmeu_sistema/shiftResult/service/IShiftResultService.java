@@ -21,4 +21,9 @@ public interface IShiftResultService {
     // based on the shifts whose startTime falls inside that period.
     // The results are grouped by category and summed by amount.
     List<ShiftResultSummaryDto> getUserShiftSummaryByPeriod(Long userId, LocalDate from, LocalDate to);
+
+    // Generates a summary of shift results within a given period,
+    // based on ShiftResult entryDate, not shift startTime.
+    // The results are grouped by category and summed by amount.
+    List<ShiftResultSummaryDto> getSummaryByEntryDatePeriod(LocalDate from, LocalDate to) throws Exception;
 }

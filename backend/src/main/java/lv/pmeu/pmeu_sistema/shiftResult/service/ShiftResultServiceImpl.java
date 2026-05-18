@@ -172,4 +172,32 @@ public class ShiftResultServiceImpl implements IShiftResultService {
                 .toList();
     }
 
+
+    @Override
+    public List<ShiftResultSummaryDto> getSummaryByEntryDatePeriod(LocalDate from, LocalDate to) throws Exception {
+
+        if (from == null || to == null) {
+            throw new Exception("Perioda sākuma un beigu datums ir obligāts");
+        }
+
+        if (from.isAfter(to)) {
+            throw new Exception("Perioda sākuma datums nevar būt pēc beigu datuma");
+        }
+
+        List<ShiftResult> results = shiftResultRepository.findByEntryDateBetween(from, to);
+
+        Map<ShiftResultCategory, Integer> summaryMap = results.stream()
+                .collect(Collectors.groupingBy(
+                        ShiftResult::getCategory,
+                        Collectors.summingInt(ShiftResult::getAmount)
+                ));
+
+        return summaryMap.entrySet().stream()
+                .map(entry -> new ShiftResultSummaryDto(
+                        entry.getKey(),
+                        entry.getValue()
+                ))
+                .collect(Collectors.toList());
+    }
+
 }

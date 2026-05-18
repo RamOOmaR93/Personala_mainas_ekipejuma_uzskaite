@@ -169,4 +169,23 @@ public class ShiftResultController {
         return shiftResultService.getUserShiftSummaryByPeriod(userId, from, to);
     }
 
+
+    // Returns a summary of results within a selected period,
+    // based on ShiftResult entryDate instead of shift startTime.
+    @GetMapping("/report/by-entry-date")
+    public ResponseEntity<?> getSummaryByEntryDatePeriod(
+            @RequestParam LocalDate from,
+            @RequestParam LocalDate to) {
+
+        try {
+
+            return ResponseEntity.ok(
+                    shiftResultService.getSummaryByEntryDatePeriod(from, to)
+            );
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
