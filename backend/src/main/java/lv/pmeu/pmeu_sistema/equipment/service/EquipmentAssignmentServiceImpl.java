@@ -68,6 +68,23 @@ public class EquipmentAssignmentServiceImpl implements IEquipmentAssignmentServi
         return equipmentAssignmentRepository.findByUserId(userId);
     }
 
+
+    @Override
+    public EquipmentAssignment updateAssignment(Long id, EquipmentAssignmentRequest request) throws Exception {
+
+        if (request == null) {
+            throw new Exception("Ekipējuma piešķīruma dati nav norādīti");
+        }
+
+        EquipmentAssignment assignment = equipmentAssignmentRepository.findById(id)
+                .orElseThrow(() -> new Exception("Ekipējuma piešķīrums netika atrasts"));
+
+        assignment.setIssuedDate(request.getIssuedDate());
+        assignment.setNotes(request.getNotes());
+        assignment.setActive(request.isActive());
+
+        return equipmentAssignmentRepository.save(assignment);
+    }
     
 
 }

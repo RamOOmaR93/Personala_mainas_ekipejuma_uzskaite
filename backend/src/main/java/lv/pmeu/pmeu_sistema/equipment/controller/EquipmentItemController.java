@@ -3,6 +3,8 @@ package lv.pmeu.pmeu_sistema.equipment.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lv.pmeu.pmeu_sistema.equipment.model.EquipmentItem;
@@ -20,5 +22,10 @@ public class EquipmentItemController {
     @GetMapping("/equipment-items")
     public List<EquipmentItem> getAllEquipmentItems() {
         return equipmentItemRepository.findAll();
+    }
+
+    @PostMapping("/equipment-items")
+    public EquipmentItem createEquipmentItem(@RequestBody EquipmentItem item) {
+        return equipmentItemRepository.save(item);
     }
 }

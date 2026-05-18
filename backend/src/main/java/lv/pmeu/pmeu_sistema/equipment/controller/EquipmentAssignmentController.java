@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,21 @@ public class EquipmentAssignmentController {
     public ResponseEntity<?> assignEquipment(@RequestBody EquipmentAssignmentRequest request) {
         try {
             return ResponseEntity.ok(equipmentAssignmentService.assignEquipment(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @PutMapping("/assignments/{id}")
+    public ResponseEntity<?> updateAssignment(
+            @PathVariable Long id,
+            @RequestBody EquipmentAssignmentRequest request
+    ) {
+        try {
+            return ResponseEntity.ok(
+                    equipmentAssignmentService.updateAssignment(id, request)
+            );
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
