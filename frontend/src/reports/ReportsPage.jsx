@@ -26,6 +26,32 @@ function ReportsPage({ currentUser }) {
         }
     };
 
+    const normalizeText = (text) => {
+        return text
+            .replaceAll("ā", "a")
+            .replaceAll("č", "c")
+            .replaceAll("ē", "e")
+            .replaceAll("ģ", "g")
+            .replaceAll("ī", "i")
+            .replaceAll("ķ", "k")
+            .replaceAll("ļ", "l")
+            .replaceAll("ņ", "n")
+            .replaceAll("š", "s")
+            .replaceAll("ū", "u")
+            .replaceAll("ž", "z")
+            .replaceAll("Ā", "A")
+            .replaceAll("Č", "C")
+            .replaceAll("Ē", "E")
+            .replaceAll("Ģ", "G")
+            .replaceAll("Ī", "I")
+            .replaceAll("Ķ", "K")
+            .replaceAll("Ļ", "L")
+            .replaceAll("Ņ", "N")
+            .replaceAll("Š", "S")
+            .replaceAll("Ū", "U")
+            .replaceAll("Ž", "Z");
+    };
+
     const handleDownloadPdf = () => {
         const doc = new jsPDF();
 
@@ -34,21 +60,26 @@ function ReportsPage({ currentUser }) {
 
         // Centered title
         doc.setFontSize(16);
-        doc.text("Atskaites parskats", 105, 60, {
+        doc.text(normalizeText("Atskaites pārskats"), 105, 60, {
             align: "center"
         });
 
         // Centered period
         doc.setFontSize(11);
-        doc.text(`Periods: ${fromDate} lidz ${toDate}`, 105, 70, {
-            align: "center"
-        });
+        doc.text(
+            normalizeText(`Periods: ${fromDate} līdz ${toDate}`),
+            105,
+            70,
+            {
+                align: "center"
+            }
+        );
 
         autoTable(doc, {
             startY: 85,
             head: [["Kategorija", "Kopejais daudzums"]],
             body: reportData.map((item) => [
-                item.category,
+                normalizeText(item.category),
                 item.totalAmount
             ])
         });
@@ -56,7 +87,7 @@ function ReportsPage({ currentUser }) {
         doc.setFontSize(10);
 
         doc.text(
-            `Atskaiti izveidoja: ${currentUser.firstName} ${currentUser.lastName}`,
+            `Atskaiti izveidoja: ${normalizeText(currentUser.firstName)} ${normalizeText(currentUser.lastName)}`,
             14,
             280
         );
@@ -125,7 +156,7 @@ function ReportsPage({ currentUser }) {
                     <tbody>
                         {reportData.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.category}</td>
+                                <td>{normalizeText(item.category)}</td>
                                 <td>{item.totalAmount}</td>
                             </tr>
                         ))}
