@@ -1,34 +1,60 @@
 import React, { useState } from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import logo from "../assets/logo.png";
 
 function ReportsPage() {
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
     const [reportData, setReportData] = useState([]);
 
-
-
     const handleGenerateReport = async () => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/shift-results/report/by-entry-date?from=${fromDate}&to=${toDate}`,
+                {
+                    credentials: "include"
+                }
+            );
 
-    try {
+            const data = await response.json();
 
-        const response = await fetch(
-            `http://localhost:8080/shift-results/report/by-entry-date?from=${fromDate}&to=${toDate}`,
-            {
-                credentials: "include"
-            }
-        );
+            setReportData(data);
 
-        const data = await response.json();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-        setReportData(data);
+    const handleDownloadPdf = () => {
+        const doc = new jsPDF();
 
-    } catch (error) {
-        console.error(error);
-    }
-};
+        // Logo
+        doc.addImage(logo, "PNG", 85, 10, 40, 40);
 
+        // Centered title
+        doc.setFontSize(16);
+        doc.text("Atskaites parskats", 105, 60, {
+            align: "center"
+        });
 
+        // Centered period
+        doc.setFontSize(11);
+        doc.text(`Periods: ${fromDate} lidz ${toDate}`, 105, 70, {
+            align: "center"
+        });
 
+        autoTable(doc, {
+            startY: 85,
+            head: [["Kategorija", "Kopejais daudzums"]],
+            body: reportData.map((item) => [
+                item.category,
+                item.totalAmount
+            ])
+        });
+
+        doc.save(`atskaite_${fromDate}_${toDate}.pdf`);
+    };
 
     return (
         <div>
@@ -55,6 +81,15 @@ function ReportsPage() {
             <button onClick={handleGenerateReport}>
                 Ģenerēt atskaiti
             </button>
+
+            {reportData.length > 0 && (
+                <button
+                    onClick={handleDownloadPdf}
+                    style={{ marginLeft: "10px" }}
+                >
+                    Lejupielādēt PDF
+                </button>
+            )}
 
             <h3 style={{ marginTop: "20px" }}>
                 Atskaites rezultāti
@@ -89,7 +124,6 @@ function ReportsPage() {
                     </tbody>
                 </table>
             )}
-
         </div>
     );
 }
