@@ -4,7 +4,7 @@ import "react-calendar/dist/Calendar.css";
 import ReportsPage from "../reports/ReportsPage";
 
 
-function ManagerHomePage({ onLogout, setCurrentPage }) {
+function ManagerHomePage({ user, onLogout, setCurrentPage }) {
     const [date, setDate] = useState(new Date());
     const [summary, setSummary] = useState([]);
     const [dayShifts, setDayShifts] = useState([]);
@@ -275,7 +275,7 @@ function ManagerHomePage({ onLogout, setCurrentPage }) {
 
 
     {managerSection === "reportsPage" && (
-        <ReportsPage />
+        <ReportsPage currentUser={user} />
     )}
 
     {managerSection === "employees" && (

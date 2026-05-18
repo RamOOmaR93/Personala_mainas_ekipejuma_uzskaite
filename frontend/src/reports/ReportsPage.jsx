@@ -3,7 +3,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logo from "../assets/logo.png";
 
-function ReportsPage() {
+function ReportsPage({ currentUser }) {
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
     const [reportData, setReportData] = useState([]);
@@ -52,6 +52,14 @@ function ReportsPage() {
                 item.totalAmount
             ])
         });
+
+        doc.setFontSize(10);
+
+        doc.text(
+            `Atskaiti izveidoja: ${currentUser.firstName} ${currentUser.lastName}`,
+            14,
+            280
+        );
 
         doc.save(`atskaite_${fromDate}_${toDate}.pdf`);
     };
