@@ -1,4 +1,4 @@
-body {
+/*body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -10,4 +10,418 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}/*
+
+/* Page Container Width */
+
+.page-container {
+  min-height: 100vh;
+  padding: 32px;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+
+
+/* Global color palette and theme */
+:root {
+  --bg: #e8eff1;
+  --card: #ffffff;
+  --primary: #4f6f73;
+  --primary-dark: #3f5a5e;
+  --text: #243033;
+  --muted: #6b7280;
+  --border: #d9ded8;
+  --danger: #b94a48;
+  --success: #4f8f68;
+}
+
+
+
+/* Better box model handling */
+* {
+  box-sizing: border-box;
+}
+
+
+
+/* Global page styling */
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+
+
+/* Inherit same font everywhere */
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+
+
+/* Reusable page wrapper */
+/* Used for full page layouts */
+.page-container {
+  min-height: 100vh;
+  padding: 32px;
+}
+
+
+
+/* Reusable card container */
+/* Used for forms and sections */
+.card {
+  background: #f8fbfb;
+  border: 1px solid #dce7e7;
+  border-radius: 14px;
+  padding: 48px;
+  box-shadow: 0 10px 28px rgba(36, 48, 51, 0.08);
+
+  text-align: center;
+}
+
+
+
+/* Primary button styling */
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+
+/* Darker button color on hover */
+.btn:hover {
+  background: var(--primary-dark);
+}
+
+
+
+/*Reusable input styling */
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+
+
+/* Input focus highlight */
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+
+
+
+
+
+
+
+
+
+/* Login Page Layout */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+/* Login Card Styling */
+
+.login-card {
+  width: 100%;
+  max-width: 520px;
+  border-top: 5px solid var(--primary);
+}
+
+/* Login Title Styling */
+
+.login-title {
+  margin: 0 0 52px;
+  text-align: center;
+  font-size: 24px;
+}
+
+/* Login Subtitle Styling */
+
+.login-subtitle {
+  margin: 8px 0 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Login Form Layout */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Full Width Login Button */
+
+.login-button {
+  width: 100%;
+  margin-top: 4px;
+}
+
+
+
+
+
+
+
+
+/* Page Header Layout */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+/* Page Title Styling */
+
+.page-title {
+  margin: 0;
+  font-size: 28px;
+}
+
+/* Page Subtitle Styling */
+
+.page-subtitle {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+/* Dashboard Two Column Layout */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+
+/* Section Header With Action Button */
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Muted Text Styling */
+
+.text-muted {
+  color: var(--muted);
+}
+
+/* Warning Message Styling */
+
+.message {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* Warning Message Color */
+
+.message-warning {
+  background: #fff4dd;
+  color: #8a5a00;
+  border: 1px solid #f1d38a;
+}
+
+/* Secondary Button Styling */
+
+.btn-secondary {
+  background: #6f7f83;
+}
+
+/* Secondary Button Hover State */
+
+.btn-secondary:hover {
+  background: #59686c;
+}
+
+/* Summary List Styling */
+
+.summary-list {
+  padding-left: 20px;
+}
+
+/* Responsive Dashboard Layout */
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+
+
+
+/* Selected Shift Panel Inside Calendar Card */
+
+.selected-shift-panel {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+
+
+
+/* Active Shift Card Height */
+
+.active-shift-card {
+  min-height: 443px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Start Shift Button Position */
+
+.start-shift-button {
+  margin-top: 90px;
+}
+
+
+
+
+
+
+
+/* Calendar Centering */
+
+.react-calendar {
+  margin: 0 auto;
+}
+
+/* Summary List Container */
+
+.summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 18px auto 22px;
+  max-width: 520px;
+}
+
+/* Summary Result Row */
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: left;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Calendar Main Container */
+
+.react-calendar {
+  margin: 0 auto;
+  border: none !important;
+  border-radius: 16px;
+  padding: 20px;
+  background: #e6eff0 !important;
+  box-shadow: 0 4px 14px rgba(36, 48, 51, 0.06);
+}
+
+/* Calendar Navigation Bar */
+
+.react-calendar__navigation {
+  margin-bottom: 16px;
+}
+
+/* Calendar Navigation Buttons */
+
+.react-calendar__navigation button {
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Calendar Weekday Labels */
+
+.react-calendar__month-view__weekdays {
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Calendar Day Tiles */
+
+.react-calendar__tile {
+  border-radius: 10px;
+  height: 42px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+/* Calendar Hover Effect */
+
+.react-calendar__tile:hover {
+  background: #edf4f4 !important;
+}
+
+/* Current Day Styling */
+
+.react-calendar__tile--now {
+  background: #dceced !important;
+  color: var(--text) !important;
+}
+
+/* Selected Day Styling */
+
+.react-calendar__tile--active {
+  background: var(--primary) !important;
+  color: white !important;
 }

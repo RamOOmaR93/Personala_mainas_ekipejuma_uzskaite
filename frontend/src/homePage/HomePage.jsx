@@ -60,104 +60,117 @@ function HomePage({ user, onStartShift, onOpenShift, onLogout }) {
 
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Sākumlapa</h2>
-      <p>Sveiks, {user.username}</p>
-      <button onClick={onLogout}>Izlogoties</button>
+    <div className="page-container">
+      <div className="page-header">
+        <div>
+          <h2 className="page-title">Sākumlapa</h2>
+          <p className="page-subtitle">Sveiks, {user.username}</p>
+        </div>
 
-        <button onClick={onStartShift} disabled={hasTodayShift}>
-            Sākt maiņu
+        <button className="btn btn-secondary" onClick={onLogout}>
+          Izlogoties
         </button>
+      </div>
 
-    {hasTodayShift && (
-        <p style={{ color: "red" }}>
-            Šodienas maiņa jau ir uzsākta.
-        </p>
-    )}
+      <div className="dashboard-grid">
+        <div className="card active-shift-card">
+          <h3>Aktīvā maiņa</h3>
 
-      <h3 style={{ marginTop: "20px" }}>Aktīvā maiņa</h3>
-      {activeShift ? (
-        <p>
-          Maiņa ID: {activeShift.id} | Sākums: {activeShift.startTime}
-        </p>
-      ) : (
-        <p>Aktīva maiņa nav atrasta.</p>
-      )}
-
-      <h3 style={{ marginTop: "20px" }}>Manas maiņas</h3>
-
-
-      <Calendar
-        onChange={(selectedDate) => {
-          setDate(selectedDate);
-
-          const formattedDate = formatLocalDate(selectedDate);
-          const foundShift = shifts.find((shift) =>
-            shift.startTime.split("T")[0] === formattedDate
-          );
-
-          setSelectedShift(foundShift || null);
-
-          if (foundShift) {
-            fetch(`http://localhost:8080/shift-results/shift/${foundShift.id}/summary`, {
-              credentials: "include"
-            })
-              .then((res) => res.json())
-              .then((data) => setSelectedShiftSummary(data))
-              .catch((err) => console.error(err));
-          } else {
-            setSelectedShiftSummary([]);
-          }
-
-        }}
-        // Apply custom calendar styles for active and past shift dates
-        value={date}
-        tileClassName={({ date, view }) => {
-          if (view !== "month") return null;
-
-          const formattedDate = formatLocalDate(date);
-
-          if (formattedDate === today && shiftDates.includes(formattedDate)) {
-            return "active-shift-day";
-          }
-
-          if (shiftDates.includes(formattedDate)) {
-            return "past-shift-day";
-          }
-
-          return null;
-        }}
-      />
-
-      {selectedShift && (
-        <div style={{ marginTop: "20px" }}>
-          <h4>Izvēlētā maiņa</h4>
-          <p>Maiņas ID: {selectedShift.id}</p>
-          <p>Sākums: {selectedShift.startTime}</p>
-
-          <h4 style={{ marginTop: "15px" }}>Maiņas kopsavilkums</h4>
-
-          {selectedShiftSummary.length === 0 ? (
-            <p>Kopsavilkums nav pieejams.</p>
-          ) : (
-            <ul>
-              {selectedShiftSummary.map((item, index) => (
-                <li key={index}>
-                  {item.category} | kopā: {item.totalAmount}
-                </li>
-              ))}
-            </ul>
+          {hasTodayShift && (
+            <p className="message message-warning">
+              Šodienas maiņa jau ir uzsākta.
+            </p>
           )}
 
-          <button onClick={() => onOpenShift(selectedShift)}>
-            Atvērt maiņu
+          {activeShift ? (
+            <p>
+              Maiņa ID: {activeShift.id} | Sākums: {activeShift.startTime}
+            </p>
+          ) : (
+            <p className="text-muted">Aktīva maiņa nav atrasta.</p>
+          )}
+
+          <button
+            className="btn start-shift-button"
+            onClick={onStartShift}
+            disabled={hasTodayShift}
+          >
+            Sākt maiņu
           </button>
         </div>
-      )}
 
+        <div className="card">
+          <h3>Manas maiņas</h3>
 
+          <Calendar
+            onChange={(selectedDate) => {
+              setDate(selectedDate);
 
-      
+              const formattedDate = formatLocalDate(selectedDate);
+              const foundShift = shifts.find((shift) =>
+                shift.startTime.split("T")[0] === formattedDate
+              );
+
+              setSelectedShift(foundShift || null);
+
+              if (foundShift) {
+                fetch(`http://localhost:8080/shift-results/shift/${foundShift.id}/summary`, {
+                  credentials: "include"
+                })
+                  .then((res) => res.json())
+                  .then((data) => setSelectedShiftSummary(data))
+                  .catch((err) => console.error(err));
+              } else {
+                setSelectedShiftSummary([]);
+              }
+            }}
+            value={date}
+            tileClassName={({ date, view }) => {
+              if (view !== "month") return null;
+
+              const formattedDate = formatLocalDate(date);
+
+              if (formattedDate === today && shiftDates.includes(formattedDate)) {
+                return "active-shift-day";
+              }
+
+              if (shiftDates.includes(formattedDate)) {
+                return "past-shift-day";
+              }
+
+              return null;
+            }}
+          />
+
+          {selectedShift && (
+            <div className="selected-shift-panel">
+              <h3>Izvēlētā maiņa</h3>
+
+              <p>Maiņas ID: {selectedShift.id}</p>
+              <p>Sākums: {selectedShift.startTime}</p>
+
+              <h4>Maiņas kopsavilkums</h4>
+
+              {selectedShiftSummary.length === 0 ? (
+                <p className="text-muted">Kopsavilkums nav pieejams.</p>
+              ) : (
+                <div className="summary-list">
+                  {selectedShiftSummary.map((item, index) => (
+                    <div className="summary-row" key={index}>
+                      <span>{item.category}</span>
+                      <strong> | Kopā: {item.totalAmount}</strong>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button className="btn" onClick={() => onOpenShift(selectedShift)}>
+                Atvērt maiņu
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

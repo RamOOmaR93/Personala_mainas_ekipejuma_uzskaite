@@ -40,30 +40,39 @@ function LoginPage({ onLogin }) {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Pieteikšanās</h2>
+    <div className="login-page">
+      <div className="login-card card">
+        
+        <h2 className="login-title">
+          Pašvaldības Policijas Sistēma
+        </h2>
 
-      <div>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        
+        
+
+        <div className="login-form">
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="form-input"
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="form-input"
+          />
+
+          <button className="btn login-button" onClick={handleLogin}>
+            Pieteikties
+          </button>
+        </div>
+
       </div>
-
-      <div style={{ marginTop: "10px" }}>
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <button style={{ marginTop: "10px" }} onClick={handleLogin}>
-        Pieteikties
-      </button>
     </div>
   );
 }
