@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -246,6 +247,51 @@ public class ShiftResultController {
             ShiftResult updatedResult = shiftResultService.updateResult(resultId, request);
 
             return ResponseEntity.ok(toDto(updatedResult));
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    // Delete an existing shift result.
+    // Workers can delete only their own editable shift results.
+    // Managers can delete any shift result.
+    @DeleteMapping("/{resultId}")
+    public ResponseEntity<?> deleteResult(
+            @PathVariable Long resultId,
+            Authentication authentication) {
+
+        try {
+            User currentUser = userRepository.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("Lietotājs netika atrasts"));
+
+            ShiftResult existingResult = shiftResultService.getResultById(resultId);
+            Shift shift = existingResult.getShift();
+
+            boolean isManager = currentUser.getRole().equals("PRIEKSNIEKS")
+                    || currentUser.getRole().equals("VIETNIEKS");
+
+            boolean isOwner = shift.getUser().getId().equals(currentUser.getId());
+
+            boolean shiftStillEditable =
+                    !LocalDate.now().isAfter(shift.getEndTime().toLocalDate());
+
+            if (!isManager) {
+                if (!isOwner) {
+                    return ResponseEntity.status(403)
+                            .body("Nav atļauts dzēst citas maiņas rezultātus");
+                }
+
+                if (!shiftStillEditable) {
+                    return ResponseEntity.status(403)
+                            .body("Maiņas rezultātus vairs nevar dzēst");
+                }
+            }
+
+            shiftResultService.deleteResult(resultId);
+
+            return ResponseEntity.ok("Rezultāts veiksmīgi dzēsts");
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

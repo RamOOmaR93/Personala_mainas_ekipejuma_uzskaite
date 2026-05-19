@@ -238,4 +238,14 @@ public class ShiftResultServiceImpl implements IShiftResultService {
                 .orElseThrow(() -> new Exception("Rezultāts netika atrasts"));
     }
 
+
+    @Override
+    public void deleteResult(Long resultId) throws Exception {
+
+        ShiftResult result = shiftResultRepository.findById(resultId)
+                .orElseThrow(() -> new Exception("Rezultāts netika atrasts"));
+
+        shiftResultRepository.delete(result);
+    }
+
 }

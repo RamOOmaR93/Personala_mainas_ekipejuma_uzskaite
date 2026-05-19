@@ -15,6 +15,9 @@ public interface IShiftResultService {
     // Update an existing shift result.
     // Only category, amount and entryDate can be changed.
     ShiftResult updateResult(Long resultId, ShiftResultUpdateDto request) throws Exception;
+    
+    // Delete a shift result by its ID.
+    void deleteResult(Long resultId) throws Exception;
 
     ShiftResult getResultById(Long resultId) throws Exception;
 

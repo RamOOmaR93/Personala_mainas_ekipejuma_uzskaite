@@ -4,7 +4,7 @@ import "react-calendar/dist/Calendar.css";
 import ReportsPage from "../reports/ReportsPage";
 
 
-function ManagerHomePage({ user, onLogout, setCurrentPage }) {
+function ManagerHomePage({ user, onLogout, setCurrentPage, onOpenShift }) {
     const [date, setDate] = useState(new Date());
     const [summary, setSummary] = useState([]);
     const [dayShifts, setDayShifts] = useState([]);
@@ -250,6 +250,20 @@ function ManagerHomePage({ user, onLogout, setCurrentPage }) {
                 {dayShifts.map((shift) => (
                 <li key={shift.shiftId}>
                     <strong>{shift.firstName} {shift.lastName}</strong>
+
+                    <button
+                        style={{ marginLeft: "10px" }}
+                        onClick={() => onOpenShift({
+                            id: shift.shiftId,
+                            startTime: shift.startTime,
+                            endTime: shift.endTime,
+                            openedByManager: true
+                        })}
+                    >
+                        Atvērt maiņu
+                    </button>
+
+
 
                     {employeeSummaries[shift.shiftId] ? (
                         <ul>

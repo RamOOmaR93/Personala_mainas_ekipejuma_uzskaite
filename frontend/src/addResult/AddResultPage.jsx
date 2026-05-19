@@ -43,10 +43,18 @@ function AddResultPage({ shift, onBackToHome }) {
 
   const today = new Date().toISOString().split("T")[0];
 
-  // Results can be added only while the shift is active
-  const isEditable = today >= shiftStartDate && today <= maxEntryDate;
+  // Managers can edit any shift,
+  // workers only during the allowed shift period
+  const openedByManager = shift.openedByManager === true;
 
 
+  // Results can be added only while the shift is active or if the manager has opened it for editing after shift end
+  const isEditable =
+    openedByManager ||
+    (today >= shiftStartDate && today <= maxEntryDate);
+
+
+  // Determine if the current shift is still editable based on the current date and shift start date
   const handleAddResult = async () => {
     if (!category) {
       alert("Lūdzu izvēlies rezultāta kategoriju.");
@@ -90,12 +98,60 @@ function AddResultPage({ shift, onBackToHome }) {
 
       const data = await response.json();
       console.log("Pievienotais rezultāts:", data);
+
+      // Clear form inputs after successful submission
+      setCategory("");
+      setAmount("");
+      setEntryDate("");
+
+      setResults([...results, data]);
+
       alert("Rezultāts veiksmīgi pievienots");
     } catch (error) {
       console.error(error);
       alert("Kļūda, pievienojot rezultātu");
     }
 
+  };
+
+
+  // Handle result deletion with confirmation prompt
+  const handleDeleteResult = async (resultId) => {
+
+      const confirmed = window.confirm(
+          "Vai tiešām vēlies dzēst šo rezultātu?"
+      );
+
+      if (!confirmed) {
+          return;
+      }
+
+      try {
+
+          const response = await fetch(
+              `http://localhost:8080/shift-results/${resultId}`,
+              {
+                  method: "DELETE",
+                  credentials: "include"
+              }
+          );
+
+          if (!response.ok) {
+              const errorText = await response.text();
+              alert(errorText);
+              return;
+          }
+
+          setResults(
+              results.filter((result) => result.id !== resultId)
+          );
+
+          alert("Rezultāts veiksmīgi dzēsts");
+
+      } catch (error) {
+          console.error(error);
+          alert("Kļūda, dzēšot rezultātu");
+      }
   };
 
 
@@ -162,17 +218,28 @@ function AddResultPage({ shift, onBackToHome }) {
                         {result.category} | {result.amount} | {result.entryDate}
 
                         {isEditable && editingResultId !== result.id && (
-                            <button
+                          <>
+                              <button
+                                  style={{ marginLeft: "10px" }}
+                                  onClick={() => {
+                                      setEditingResultId(result.id);
+                                      setEditCategory(result.category);
+                                      setEditAmount(result.amount);
+                                      setEditEntryDate(result.entryDate);
+                                  }}
+                              >
+                                  Rediģēt
+                              </button>
+
+                              <button
                                 style={{ marginLeft: "10px" }}
-                                onClick={() => {
-                                    setEditingResultId(result.id);
-                                    setEditCategory(result.category);
-                                    setEditAmount(result.amount);
-                                    setEditEntryDate(result.entryDate);
-                                }}
+                                onClick={() => handleDeleteResult(result.id)}
                             >
-                                Rediģēt
+                                Dzēst
                             </button>
+                          </>
+
+
                         )}
 
                         {editingResultId === result.id && (

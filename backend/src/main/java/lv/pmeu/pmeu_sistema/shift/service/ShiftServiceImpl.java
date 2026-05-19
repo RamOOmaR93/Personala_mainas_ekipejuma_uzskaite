@@ -108,7 +108,9 @@ public class ShiftServiceImpl implements IShiftService {
                         shift.getUser().getId(),
                         shift.getUser().getUsername(),
                         shift.getUser().getFirstName(),
-                        shift.getUser().getLastName()
+                        shift.getUser().getLastName(),
+                        shift.getStartTime(),
+                        shift.getEndTime()
                 ))
                 .toList();
     }

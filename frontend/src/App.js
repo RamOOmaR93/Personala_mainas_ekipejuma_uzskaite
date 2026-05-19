@@ -98,7 +98,8 @@ function App() {
         <ManagerHomePage 
             user={loggedInUser}
             onLogout={handleLogout} 
-            setCurrentPage={setCurrentPage}/>
+            setCurrentPage={setCurrentPage}
+            onOpenShift={handleOpenShift}/>
       ) : currentPage === "createShift" ? (
         <CreateShiftPage
           user={loggedInUser}
@@ -107,7 +108,13 @@ function App() {
       ) : (
         <AddResultPage
           shift={currentShift}
-          onBackToHome={() => setCurrentPage("home")}
+          onBackToHome={() => {
+            if (loggedInUser.role === "PRIEKSNIEKS" || loggedInUser.role === "VIETNIEKS") {
+              setCurrentPage("manager");
+            } else {
+              setCurrentPage("home");
+            }
+          }}
         />
       )}
     </div>
