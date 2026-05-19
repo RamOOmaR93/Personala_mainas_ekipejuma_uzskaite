@@ -6,6 +6,10 @@ function AddResultPage({ shift, onBackToHome }) {
   const [entryDate, setEntryDate] = useState("");
   const [results, setResults] = useState([]);
   const [summary, setSummary] = useState([]);
+  const [editingResultId, setEditingResultId] = useState(null);
+  const [editCategory, setEditCategory] = useState("");
+  const [editAmount, setEditAmount] = useState("");
+  const [editEntryDate, setEditEntryDate] = useState("");
 
   useEffect(() => {
     fetch(`http://localhost:8080/shift-results/shift/${shift.id}`, {
@@ -92,10 +96,55 @@ function AddResultPage({ shift, onBackToHome }) {
       alert("Kļūda, pievienojot rezultātu");
     }
 
-    
-
-    
   };
+
+
+  const handleUpdateResult = async () => {
+
+      try {
+
+          const response = await fetch(
+              `http://localhost:8080/shift-results/${editingResultId}`,
+              {
+                  method: "PUT",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  credentials: "include",
+                  body: JSON.stringify({
+                      category: editCategory,
+                      amount: Number(editAmount),
+                      entryDate: editEntryDate
+                  })
+              }
+          );
+
+          if (!response.ok) {
+              const errorText = await response.text();
+              alert(errorText);
+              return;
+          }
+
+          const updatedResult = await response.json();
+
+          setResults(
+              results.map((result) =>
+                  result.id === updatedResult.id
+                      ? updatedResult
+                      : result
+              )
+          );
+
+          setEditingResultId(null);
+
+          alert("Rezultāts veiksmīgi atjaunots");
+
+      } catch (error) {
+          console.error(error);
+          alert("Kļūda, atjaunojot rezultātu");
+      }
+  };
+
 
   return (
     <div style={{ padding: "20px" }}>
@@ -109,9 +158,90 @@ function AddResultPage({ shift, onBackToHome }) {
             ) : (
               <ul>
                 {results.map((result) => (
-                  <li key={result.id}>
-                    {result.category} | {result.amount} | {result.entryDate}
-                  </li>
+                    <li key={result.id}>
+                        {result.category} | {result.amount} | {result.entryDate}
+
+                        {isEditable && editingResultId !== result.id && (
+                            <button
+                                style={{ marginLeft: "10px" }}
+                                onClick={() => {
+                                    setEditingResultId(result.id);
+                                    setEditCategory(result.category);
+                                    setEditAmount(result.amount);
+                                    setEditEntryDate(result.entryDate);
+                                }}
+                            >
+                                Rediģēt
+                            </button>
+                        )}
+
+                        {editingResultId === result.id && (
+                            <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+                                <div>
+                                    <label>Kategorija:</label>
+                                    <br />
+                                    <select
+                                        value={editCategory}
+                                        onChange={(e) => setEditCategory(e.target.value)}
+                                    >
+                                        <option value="IESNIEGUMS">IESNIEGUMS</option>
+                                        <option value="APSTASANAS_STAVESANAS_NOTEIKUMI">APSTASANAS_STAVESANAS_NOTEIKUMI</option>
+                                        <option value="RISKU_IZVERTESANA">RISKU_IZVERTESANA</option>
+                                        <option value="LEMUMS_PAR_NOSKIRSANU">LEMUMS_PAR_NOSKIRSANU</option>
+                                        <option value="APAS_ALKOHOLA_LIETOSANA_ATRASANAS">APAS_ALKOHOLA_LIETOSANA_ATRASANAS</option>
+                                        <option value="APAS_MIERA_TRAUCESANA">APAS_MIERA_TRAUCESANA</option>
+                                        <option value="APAS_CELU_SATIKSMES_LIKUMS">APAS_CELU_SATIKSMES_LIKUMS</option>
+                                        <option value="APAS_DZIVESVIETAS_DEKLARESANAS_LIKUMS">APAS_DZIVESVIETAS_DEKLARESANAS_LIKUMS</option>
+                                        <option value="APAS_SMEKESANAS_NOTEIKUMU_NEIEVEROSANA">APAS_SMEKESANAS_NOTEIKUMU_NEIEVEROSANA</option>
+                                        <option value="APAS_DZIVNIEKU_AIZSARDZIBAS_LIKUMS">APAS_DZIVNIEKU_AIZSARDZIBAS_LIKUMS</option>
+                                        <option value="APAS_SAISTOSO_NOTEIKUMU_IEVEROSANA">APAS_SAISTOSO_NOTEIKUMU_IEVEROSANA</option>
+                                        <option value="APAS_ATKRITUMU_APSAIMNIEKOSANAS_LIKUMS">APAS_ATKRITUMU_APSAIMNIEKOSANAS_LIKUMS</option>
+                                        <option value="APAS_BERNU_TIESIBU_AIZSARDZIBAS_LIKUMS">APAS_BERNU_TIESIBU_AIZSARDZIBAS_LIKUMS</option>
+                                        <option value="APAS_MAKSKERESANAS_NOTEIKUMU_IEVEROSANA">APAS_MAKSKERESANAS_NOTEIKUMU_IEVEROSANA</option>
+                                        <option value="APAS_ATTEIKUMS_UZSAKT_PROCESU">APAS_ATTEIKUMS_UZSAKT_PROCESU</option>
+                                        <option value="APAS_UZDEVUMS_CITAI_IESTADEI">APAS_UZDEVUMS_CITAI_IESTADEI</option>
+                                        <option value="LICENCETAS_MAKSKERESANAS_PARBAUDE">LICENCETAS_MAKSKERESANAS_PARBAUDE</option>
+                                    </select>
+                                </div>
+
+                                <div style={{ marginTop: "10px" }}>
+                                    <label>Daudzums:</label>
+                                    <br />
+                                    <input
+                                        type="number"
+                                        value={editAmount}
+                                        onChange={(e) => setEditAmount(e.target.value)}
+                                    />
+                                </div>
+
+                                <div style={{ marginTop: "10px" }}>
+                                    <label>Datums:</label>
+                                    <br />
+                                    <input
+                                        type="date"
+                                        value={editEntryDate}
+                                        min={shiftStartDate}
+                                        max={maxEntryDate}
+                                        onChange={(e) => setEditEntryDate(e.target.value)}
+                                    />
+                                </div>
+
+                                <button
+                                    style={{ marginTop: "10px" }}
+                                    onClick={handleUpdateResult}
+                                >
+                                    Saglabāt
+                                </button>
+
+                                <button
+                                    style={{ marginTop: "10px", marginLeft: "10px" }}
+                                    onClick={() => setEditingResultId(null)}
+                                >
+                                    Atcelt
+                                </button>
+                            </div>
+                        )}
+                    </li>
                 ))}
               </ul>
             )}

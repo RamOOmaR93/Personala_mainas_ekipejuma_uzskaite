@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/**").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
                         .requestMatchers("/equipment-items").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
                         .requestMatchers("/shift-results/summary/**").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
+                        .requestMatchers("/shift-results/report/**").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
                         .requestMatchers("/shifts/by-date").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
                         .anyRequest().authenticated()
 

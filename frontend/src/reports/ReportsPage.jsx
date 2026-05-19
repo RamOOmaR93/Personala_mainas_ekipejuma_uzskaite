@@ -7,6 +7,7 @@ function ReportsPage({ currentUser }) {
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
     const [reportData, setReportData] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleGenerateReport = async () => {
         try {
@@ -19,10 +20,17 @@ function ReportsPage({ currentUser }) {
 
             const data = await response.json();
 
+            if (!response.ok) {
+                setErrorMessage(data);
+                setReportData([]);
+                return;
+            }
+
             setReportData(data);
 
         } catch (error) {
             console.error(error);
+            setErrorMessage("Kļūda generējot atskaiti.");
         }
     };
 
@@ -121,6 +129,10 @@ function ReportsPage({ currentUser }) {
                 Ģenerēt atskaiti
             </button>
 
+            {errorMessage && (
+                <p style={{ color: "red" }}>{errorMessage}</p>
+            )}
+
             {reportData.length > 0 && (
                 <button
                     onClick={handleDownloadPdf}
@@ -128,6 +140,12 @@ function ReportsPage({ currentUser }) {
                 >
                     Lejupielādēt PDF
                 </button>
+            )}
+
+            {errorMessage && (
+                <p style={{ color: "red", marginTop: "15px" }}>
+                    {errorMessage}
+                </p>
             )}
 
             <h3 style={{ marginTop: "20px" }}>

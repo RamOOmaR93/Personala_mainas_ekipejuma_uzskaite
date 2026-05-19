@@ -12,6 +12,7 @@ import lv.pmeu.pmeu_sistema.shift.model.Shift;
 import lv.pmeu.pmeu_sistema.shift.repo.ShiftRepository;
 import lv.pmeu.pmeu_sistema.shiftResult.dto.ShiftResultRequestDto;
 import lv.pmeu.pmeu_sistema.shiftResult.dto.ShiftResultSummaryDto;
+import lv.pmeu.pmeu_sistema.shiftResult.dto.ShiftResultUpdateDto;
 import lv.pmeu.pmeu_sistema.shiftResult.model.ShiftResult;
 import lv.pmeu.pmeu_sistema.shiftResult.model.ShiftResultCategory;
 import lv.pmeu.pmeu_sistema.shiftResult.repo.ShiftResultRepository;
@@ -198,6 +199,43 @@ public class ShiftResultServiceImpl implements IShiftResultService {
                         entry.getValue()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ShiftResult updateResult(Long resultId, ShiftResultUpdateDto request) throws Exception {
+
+        if (request == null) {
+            throw new Exception("Rezultāta dati nav norādīti");
+        }
+
+        ShiftResult result = shiftResultRepository.findById(resultId)
+                .orElseThrow(() -> new Exception("Rezultāts netika atrasts"));
+
+        if (request.getCategory() == null) {
+            throw new Exception("Kategorija nav norādīta");
+        }
+
+        if (request.getAmount() == null || request.getAmount() <= 0) {
+            throw new Exception("Daudzumam jābūt lielākam par 0");
+        }
+
+        if (request.getEntryDate() == null) {
+            throw new Exception("Datums nav norādīts");
+        }
+
+        result.setCategory(request.getCategory());
+        result.setAmount(request.getAmount());
+        result.setEntryDate(request.getEntryDate());
+
+        return shiftResultRepository.save(result);
+    }
+
+
+    @Override
+    public ShiftResult getResultById(Long resultId) throws Exception {
+
+        return shiftResultRepository.findById(resultId)
+                .orElseThrow(() -> new Exception("Rezultāts netika atrasts"));
     }
 
 }

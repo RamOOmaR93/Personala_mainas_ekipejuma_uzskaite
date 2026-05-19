@@ -5,11 +5,18 @@ import java.util.List;
 
 import lv.pmeu.pmeu_sistema.shiftResult.dto.ShiftResultRequestDto;
 import lv.pmeu.pmeu_sistema.shiftResult.dto.ShiftResultSummaryDto;
+import lv.pmeu.pmeu_sistema.shiftResult.dto.ShiftResultUpdateDto;
 import lv.pmeu.pmeu_sistema.shiftResult.model.ShiftResult;
 
 public interface IShiftResultService {
 
     ShiftResult addResult(ShiftResultRequestDto request) throws Exception;
+
+    // Update an existing shift result.
+    // Only category, amount and entryDate can be changed.
+    ShiftResult updateResult(Long resultId, ShiftResultUpdateDto request) throws Exception;
+
+    ShiftResult getResultById(Long resultId) throws Exception;
 
     List<ShiftResult> getResultsByShiftId(Long shiftId) throws Exception;
 
