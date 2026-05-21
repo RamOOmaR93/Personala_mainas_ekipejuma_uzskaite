@@ -104,83 +104,78 @@ function ReportsPage({ currentUser }) {
     };
 
     return (
-        <div>
-            <h2>Atskaites</h2>
+        <div className="reports-layout">
+            <div className="reports-sidebar">
+                <div className="card">
+                    <h2>Atskaites</h2>
 
-            <div>
-                <label>No datuma:</label>
-                <input
-                    type="date"
-                    value={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
-                />
+                    <div className="form-group">
+                        <label className="form-label">No datuma:</label>
+                        <input
+                            className="form-input"
+                            type="date"
+                            value={fromDate}
+                            onChange={(e) => setFromDate(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Līdz datumam:</label>
+                        <input
+                            className="form-input"
+                            type="date"
+                            value={toDate}
+                            onChange={(e) => setToDate(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="report-actions">
+                        <button className="btn" onClick={handleGenerateReport}>
+                            Ģenerēt atskaiti
+                        </button>
+
+                        {reportData.length > 0 && (
+                            <button className="btn btn-secondary" onClick={handleDownloadPdf}>
+                                Lejupielādēt PDF
+                            </button>
+                        )}
+                    </div>
+
+                    {errorMessage && (
+                        <div className="error-message">
+                            {errorMessage}
+                        </div>
+                    )}
+                </div>
             </div>
 
-            <div>
-                <label>Līdz datumam:</label>
-                <input
-                    type="date"
-                    value={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
-                />
-            </div>
+            <div className="card report-table-card">
+                <h3>Atskaites rezultāti</h3>
 
-            <button onClick={handleGenerateReport}>
-                Ģenerēt atskaiti
-            </button>
-
-            {errorMessage && (
-                <p style={{ color: "red" }}>{errorMessage}</p>
-            )}
-
-            {reportData.length > 0 && (
-                <button
-                    onClick={handleDownloadPdf}
-                    style={{ marginLeft: "10px" }}
-                >
-                    Lejupielādēt PDF
-                </button>
-            )}
-
-            {errorMessage && (
-                <p style={{ color: "red", marginTop: "15px" }}>
-                    {errorMessage}
-                </p>
-            )}
-
-            <h3 style={{ marginTop: "20px" }}>
-                Atskaites rezultāti
-            </h3>
-
-            {reportData.length === 0 ? (
-                <p>Dati nav atrasti.</p>
-            ) : (
-                <table
-                    border="1"
-                    cellPadding="8"
-                    style={{
-                        borderCollapse: "collapse",
-                        width: "100%",
-                        marginTop: "10px"
-                    }}
-                >
-                    <thead>
-                        <tr>
-                            <th style={{ width: "70%" }}>Kategorija</th>
-                            <th style={{ width: "30%" }}>Kopējais daudzums</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {reportData.map((item, index) => (
-                            <tr key={index}>
-                                <td>{normalizeText(item.category)}</td>
-                                <td>{item.totalAmount}</td>
+                {reportData.length === 0 ? (
+                    <div className="report-empty">
+                        Dati nav atrasti.
+                    </div>
+                ) : (
+                    <table className="modern-table">
+                        <thead>
+                            <tr>
+                                <th style={{ width: "70%" }}>Kategorija</th>
+                                <th style={{ width: "30%" }}>Kopējais daudzums</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+                        </thead>
+
+                        <tbody>
+                            {reportData.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{normalizeText(item.category)}</td>
+                                    <td>{item.totalAmount}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
         </div>
     );
 }

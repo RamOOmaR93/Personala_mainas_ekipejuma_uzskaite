@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function CreateShiftPage({ user, onShiftCreated }) {
+function CreateShiftPage({ user, onShiftCreated, onBack }) {
   const [shiftDate, setShiftDate] = useState("");
   const [comment, setComment] = useState("");
 
@@ -54,35 +54,48 @@ function CreateShiftPage({ user, onShiftCreated }) {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Izveidot maiņu</h2>
+    <div className="page-container">
+      <div className="form-page-card card">
+        <h2 className="page-title">Izveidot maiņu</h2>
 
-      <div>
-        <label>Datums:</label>
-        <br />
-        // Restrict date picker to allowed shift dates
-        <input
-          type="date"
-          value={shiftDate}
-          min={minDate}
-          max={maxDate}
-          onChange={(e) => setShiftDate(e.target.value)}
-        />
+        {/* Shift Date Selection */}
+
+        <div className="form-group">
+          <label>Datums:</label>
+
+          <input
+            className="form-input"
+            type="date"
+            value={shiftDate}
+            min={minDate}
+            max={maxDate}
+            onChange={(e) => setShiftDate(e.target.value)}
+          />
+        </div>
+
+        {/* Shift Comment Input */}
+
+        <div className="form-group">
+          <label>Komentārs:</label>
+
+          <input
+            className="form-input"
+            type="text"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        </div>
+
+        <div className="form-actions">
+          <button className="btn" onClick={handleCreateShift}>
+            Izveidot maiņu
+          </button>
+
+          <button className="btn btn-secondary" onClick={onBack}>
+            Atpakaļ
+          </button>
+        </div>
       </div>
-
-      <div style={{ marginTop: "10px" }}>
-        <label>Komentārs:</label>
-        <br />
-        <input
-          type="text"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-      </div>
-
-      <button style={{ marginTop: "10px" }} onClick={handleCreateShift}>
-        Izveidot maiņu
-      </button>
     </div>
   );
 }

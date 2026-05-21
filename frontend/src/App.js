@@ -104,6 +104,7 @@ function App() {
         <CreateShiftPage
           user={loggedInUser}
           onShiftCreated={handleShiftCreated}
+          onBack={() => setCurrentPage("home")}
         />
       ) : (
         <AddResultPage

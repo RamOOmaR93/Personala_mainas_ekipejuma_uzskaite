@@ -203,23 +203,36 @@ function AddResultPage({ shift, onBackToHome }) {
 
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Pievienot rezultātu</h2>
-      <p>Maiņas ID: {shift.id}</p>
+    <div className="page-container">
+      <div className="shift-result-card card">
+
+        <div className="card">
+        <h2>Pievienot rezultātu</h2>
+        <p>Maiņas ID: {shift.id}</p>
 
       <h3>Esošie rezultāti</h3>
 
       {results.length === 0 ? (
               <p>Rezultāti vēl nav pievienoti.</p>
             ) : (
-              <ul>
+              <div className="employee-shift-list">
                 {results.map((result) => (
-                    <li key={result.id}>
-                        {result.category} | {result.amount} | {result.entryDate}
+                  <div className="employee-shift-card" key={result.id}>
+                        <div className="employee-shift-header">
+
+                          <strong>
+                            {result.category}
+                          </strong>
+
+                          <div>
+                            <strong>{result.amount}</strong> | {result.entryDate}
+                          </div>
+
+                        </div>
 
                         {isEditable && editingResultId !== result.id && (
                           <>
-                              <button
+                              <button className="btn"
                                   style={{ marginLeft: "10px" }}
                                   onClick={() => {
                                       setEditingResultId(result.id);
@@ -231,7 +244,7 @@ function AddResultPage({ shift, onBackToHome }) {
                                   Rediģēt
                               </button>
 
-                              <button
+                              <button className="btn btn-secondary"
                                 style={{ marginLeft: "10px" }}
                                 onClick={() => handleDeleteResult(result.id)}
                             >
@@ -244,10 +257,13 @@ function AddResultPage({ shift, onBackToHome }) {
 
                         {editingResultId === result.id && (
                             <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-                                <div>
+                              
+
+                              
+                                <div className="form-group">
                                     <label>Kategorija:</label>
                                     <br />
-                                    <select
+                                    <select className="form-input"
                                         value={editCategory}
                                         onChange={(e) => setEditCategory(e.target.value)}
                                     >
@@ -271,21 +287,23 @@ function AddResultPage({ shift, onBackToHome }) {
                                     </select>
                                 </div>
 
-                                <div style={{ marginTop: "10px" }}>
+                                <div className="form-group">
                                     <label>Daudzums:</label>
                                     <br />
                                     <input
                                         type="number"
+                                        className="form-input"
                                         value={editAmount}
                                         onChange={(e) => setEditAmount(e.target.value)}
                                     />
                                 </div>
 
-                                <div style={{ marginTop: "10px" }}>
+                                <div className="form-group">
                                     <label>Datums:</label>
                                     <br />
                                     <input
                                         type="date"
+                                        className="form-input"
                                         value={editEntryDate}
                                         min={shiftStartDate}
                                         max={maxEntryDate}
@@ -294,6 +312,7 @@ function AddResultPage({ shift, onBackToHome }) {
                                 </div>
 
                                 <button
+                                    className="btn btn-primary"
                                     style={{ marginTop: "10px" }}
                                     onClick={handleUpdateResult}
                                 >
@@ -301,6 +320,7 @@ function AddResultPage({ shift, onBackToHome }) {
                                 </button>
 
                                 <button
+                                    className="btn btn-secondary"
                                     style={{ marginTop: "10px", marginLeft: "10px" }}
                                     onClick={() => setEditingResultId(null)}
                                 >
@@ -308,9 +328,9 @@ function AddResultPage({ shift, onBackToHome }) {
                                 </button>
                             </div>
                         )}
-                    </li>
+                    </div>
                 ))}
-              </ul>
+              </div>
             )}
 
       <h3 style={{ marginTop: "20px" }}>Kopsavilkums</h3>
@@ -318,92 +338,94 @@ function AddResultPage({ shift, onBackToHome }) {
       {summary.length === 0 ? (
         <p>Kopsavilkums nav pieejams.</p>
       ) : (
-        <ul>
+        <div className="summary-list">
           {summary.map((item, index) => (
-            <li key={index}>
-              {item.category} | kopā: {item.totalAmount}
-            </li>
+            <div className="summary-row" key={index}>
+              <span>{item.category}</span>
+              <strong>Kopā: {item.totalAmount}</strong>
+            </div>
           ))}
-        </ul>
+      </div>
       )}
 
-
-
-
-      
-
-
-
-      <div>
-        <label>Kategorija:</label>
-        <br />
-        <select 
-          value={category}
-          // Disable result form when the shift is no longer editable
-          disabled={!isEditable}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="">-- Izvēlies kategoriju --</option>
-          <option value="IESNIEGUMS">IESNIEGUMS</option>
-          <option value="APSTASANAS_STAVESANAS_NOTEIKUMI">APSTASANAS_STAVESANAS_NOTEIKUMI</option>
-          <option value="RISKU_IZVERTESANA">RISKU_IZVERTESANA</option>
-          <option value="LEMUMS_PAR_NOSKIRSANU">LEMUMS_PAR_NOSKIRSANU</option>
-          <option value="APAS_ALKOHOLA_LIETOSANA_ATRASANAS">APAS_ALKOHOLA_LIETOSANA_ATRASANAS</option>
-          <option value="APAS_MIERA_TRAUCESANA">APAS_MIERA_TRAUCESANA</option>
-          <option value="APAS_CELU_SATIKSMES_LIKUMS">APAS_CELU_SATIKSMES_LIKUMS</option>
-          <option value="APAS_DZIVESVIETAS_DEKLARESANAS_LIKUMS">APAS_DZIVESVIETAS_DEKLARESANAS_LIKUMS</option>
-          <option value="APAS_SMEKESANAS_NOTEIKUMU_NEIEVEROSANA">APAS_SMEKESANAS_NOTEIKUMU_NEIEVEROSANA</option>
-          <option value="APAS_DZIVNIEKU_AIZSARDZIBAS_LIKUMS">APAS_DZIVNIEKU_AIZSARDZIBAS_LIKUMS</option>
-          <option value="APAS_SAISTOSO_NOTEIKUMU_IEVEROSANA">APAS_SAISTOSO_NOTEIKUMU_IEVEROSANA</option>
-          <option value="APAS_ATKRITUMU_APSAIMNIEKOSANAS_LIKUMS">APAS_ATKRITUMU_APSAIMNIEKOSANAS_LIKUMS</option>
-          <option value="APAS_BERNU_TIESIBU_AIZSARDZIBAS_LIKUMS">APAS_BERNU_TIESIBU_AIZSARDZIBAS_LIKUMS</option>
-          <option value="APAS_MAKSKERESANAS_NOTEIKUMU_IEVEROSANA">APAS_MAKSKERESANAS_NOTEIKUMU_IEVEROSANA</option>
-          <option value="APAS_ATTEIKUMS_UZSAKT_PROCESU">APAS_ATTEIKUMS_UZSAKT_PROCESU</option>
-          <option value="APAS_UZDEVUMS_CITAI_IESTADEI">APAS_UZDEVUMS_CITAI_IESTADEI</option>
-          <option value="LICENCETAS_MAKSKERESANAS_PARBAUDE">LICENCETAS_MAKSKERESANAS_PARBAUDE</option>
-        </select>
-      </div>
-
-      <div style={{ marginTop: "10px" }}>
-        <label>Daudzums:</label>
-        <br />
-        <input
-          type="number"
-          value={amount}
-          // Disable result form when the shift is no longer editable
-          disabled={!isEditable}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-      </div>
-
-      <div style={{ marginTop: "10px" }}>
-        <label>Datums:</label>
-        <br />
-        <input
-          type="date"
-          value={entryDate}
-          min={shiftStartDate}
-          max={maxEntryDate}
-          // Disable result form when the shift is no longer editable
-          disabled={!isEditable}
-          onChange={(e) => setEntryDate(e.target.value)}
-        />
-      </div>
-
-        <button 
-        style={{ marginTop: "10px" }} 
-        onClick={handleAddResult}
-        // Disable result form when the shift is no longer editable
-        disabled={!isEditable}
-        >
-            Pievienot rezultātu
-        </button>
-        <button 
-          style={{ marginTop: "10px", marginLeft: "10px" }} 
-          onClick={onBackToHome}>
-            Atpakaļ uz sākumlapu
-        </button>
     </div>
+
+    <div className="card">
+
+      <div className="form-group">
+          <label>Kategorija:</label>
+
+          <select
+            className="form-input"
+            value={category}
+            disabled={!isEditable}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">-- Izvēlies kategoriju --</option>
+            <option value="IESNIEGUMS">IESNIEGUMS</option>
+            <option value="APSTASANAS_STAVESANAS_NOTEIKUMI">APSTASANAS_STAVESANAS_NOTEIKUMI</option>
+            <option value="RISKU_IZVERTESANA">RISKU_IZVERTESANA</option>
+            <option value="LEMUMS_PAR_NOSKIRSANU">LEMUMS_PAR_NOSKIRSANU</option>
+            <option value="APAS_ALKOHOLA_LIETOSANA_ATRASANAS">APAS_ALKOHOLA_LIETOSANA_ATRASANAS</option>
+            <option value="APAS_MIERA_TRAUCESANA">APAS_MIERA_TRAUCESANA</option>
+            <option value="APAS_CELU_SATIKSMES_LIKUMS">APAS_CELU_SATIKSMES_LIKUMS</option>
+            <option value="APAS_DZIVESVIETAS_DEKLARESANAS_LIKUMS">APAS_DZIVESVIETAS_DEKLARESANAS_LIKUMS</option>
+            <option value="APAS_SMEKESANAS_NOTEIKUMU_NEIEVEROSANA">APAS_SMEKESANAS_NOTEIKUMU_NEIEVEROSANA</option>
+            <option value="APAS_DZIVNIEKU_AIZSARDZIBAS_LIKUMS">APAS_DZIVNIEKU_AIZSARDZIBAS_LIKUMS</option>
+            <option value="APAS_SAISTOSO_NOTEIKUMU_IEVEROSANA">APAS_SAISTOSO_NOTEIKUMU_IEVEROSANA</option>
+            <option value="APAS_ATKRITUMU_APSAIMNIEKOSANAS_LIKUMS">APAS_ATKRITUMU_APSAIMNIEKOSANAS_LIKUMS</option>
+            <option value="APAS_BERNU_TIESIBU_AIZSARDZIBAS_LIKUMS">APAS_BERNU_TIESIBU_AIZSARDZIBAS_LIKUMS</option>
+            <option value="APAS_MAKSKERESANAS_NOTEIKUMU_IEVEROSANA">APAS_MAKSKERESANAS_NOTEIKUMU_IEVEROSANA</option>
+            <option value="APAS_ATTEIKUMS_UZSAKT_PROCESU">APAS_ATTEIKUMS_UZSAKT_PROCESU</option>
+            <option value="APAS_UZDEVUMS_CITAI_IESTADEI">APAS_UZDEVUMS_CITAI_IESTADEI</option>
+            <option value="LICENCETAS_MAKSKERESANAS_PARBAUDE">LICENCETAS_MAKSKERESANAS_PARBAUDE</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Daudzums:</label>
+
+          <input
+            className="form-input"
+            type="number"
+            value={amount}
+            disabled={!isEditable}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Datums:</label>
+
+          <input
+            className="form-input"
+            type="date"
+            value={entryDate}
+            min={shiftStartDate}
+            max={maxEntryDate}
+            disabled={!isEditable}
+            onChange={(e) => setEntryDate(e.target.value)}
+          />
+        </div>
+
+        <button
+          className="btn"
+          onClick={handleAddResult}
+          disabled={!isEditable}
+        >
+          Pievienot rezultātu
+        </button>
+
+        <button
+          className="btn btn-secondary"
+          style={{ marginLeft: "10px" }}
+          onClick={onBackToHome}
+        >
+          Atpakaļ uz sākumlapu
+        </button>
+      </div>
+    </div>
+  </div>
   );
 }
 
