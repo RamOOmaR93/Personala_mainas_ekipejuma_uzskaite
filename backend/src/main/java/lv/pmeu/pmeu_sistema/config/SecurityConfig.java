@@ -31,11 +31,20 @@ public class SecurityConfig {
                 .userDetailsService(customUserDetailsService)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/users/*/equipment")
+                        .hasAnyRole("DARBINIEKS", "PRIEKSNIEKS", "VIETNIEKS")
+
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/equipment-items")
+                        .hasAnyRole("DARBINIEKS", "PRIEKSNIEKS", "VIETNIEKS")
+
                         .requestMatchers("/users/**").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
                         .requestMatchers("/equipment-items").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
+
                         .requestMatchers("/shift-results/summary/**").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
                         .requestMatchers("/shift-results/report/**").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
                         .requestMatchers("/shifts/by-date").hasAnyRole("PRIEKSNIEKS", "VIETNIEKS")
+
                         .anyRequest().authenticated()
 
                         //.anyRequest().permitAll()
