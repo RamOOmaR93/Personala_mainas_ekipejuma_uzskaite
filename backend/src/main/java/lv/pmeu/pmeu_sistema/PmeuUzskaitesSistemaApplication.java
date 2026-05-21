@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +20,6 @@ import lv.pmeu.pmeu_sistema.shiftResult.repo.ShiftResultRepository;
 import lv.pmeu.pmeu_sistema.user.model.User;
 import lv.pmeu.pmeu_sistema.user.repo.UserRepository;
 
-
 @SpringBootApplication
 public class PmeuUzskaitesSistemaApplication {
 
@@ -28,7 +28,8 @@ public class PmeuUzskaitesSistemaApplication {
                                 UserRepository userRepo, 
                                 ShiftRepository shiftRepo, 
                                 ShiftResultRepository shiftResultRepo,
-                                org.springframework.security.crypto.password.PasswordEncoder passwordEncoder){
+                                org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
+                                @Value("${demo.user.password}") String demoUserPassword){
 
         // Equipment items are stored in database so they can be managed as separate records
         return args -> {
@@ -80,34 +81,34 @@ public class PmeuUzskaitesSistemaApplication {
                 // and passwords should not be stored in source code.
 
                 if (userRepo.count() == 0) {
-                        userRepo.save(new User(null, "prieksnieks1", passwordEncoder.encode("test123"), "PRIEKSNIEKS", true,
+                        userRepo.save(new User(null, "prieksnieks1", passwordEncoder.encode(demoUserPassword), "PRIEKSNIEKS", true,
                                 "Jānis", "Vadītājs", "111111-11111", "20000001"));
 
-                        userRepo.save(new User(null, "vietnieks1", passwordEncoder.encode("test123"), "VIETNIEKS", true,
+                        userRepo.save(new User(null, "vietnieks1", passwordEncoder.encode(demoUserPassword), "VIETNIEKS", true,
                                 "Andris", "Vietnieks", "222222-22222", "20000002"));
 
-                        userRepo.save(new User(null, "darbinieks1", passwordEncoder.encode("test123"), "DARBINIEKS", true,
+                        userRepo.save(new User(null, "darbinieks1", passwordEncoder.encode(demoUserPassword), "DARBINIEKS", true,
                                 "Pēteris", "Ozols", "333333-33333", "20000003"));
 
-                        userRepo.save(new User(null, "darbinieks2", passwordEncoder.encode("test123"), "DARBINIEKS", true,
+                        userRepo.save(new User(null, "darbinieks2", passwordEncoder.encode(demoUserPassword), "DARBINIEKS", true,
                                 "Mārtiņš", "Bērziņš", "444444-44444", "20000004"));
 
-                        userRepo.save(new User(null, "darbinieks3", passwordEncoder.encode("test123"), "DARBINIEKS", true,
+                        userRepo.save(new User(null, "darbinieks3", passwordEncoder.encode(demoUserPassword), "DARBINIEKS", true,
                                 "Edgars", "Liepa", "555555-55555", "20000005"));
 
-                        userRepo.save(new User(null, "darbinieks4", passwordEncoder.encode("test123"), "DARBINIEKS", true,
+                        userRepo.save(new User(null, "darbinieks4", passwordEncoder.encode(demoUserPassword), "DARBINIEKS", true,
                                 "Kaspars", "Kalniņš", "666666-66666", "20000006"));
 
-                        userRepo.save(new User(null, "darbinieks5", passwordEncoder.encode("test123"), "DARBINIEKS", true,
+                        userRepo.save(new User(null, "darbinieks5", passwordEncoder.encode(demoUserPassword), "DARBINIEKS", true,
                                 "Artūrs", "Krūmiņš", "777777-77777", "20000007"));
 
-                        userRepo.save(new User(null, "darbinieks6", passwordEncoder.encode("test123"), "DARBINIEKS", true,
+                        userRepo.save(new User(null, "darbinieks6", passwordEncoder.encode(demoUserPassword), "DARBINIEKS", true,
                                 "Rihards", "Eglītis", "888888-88888", "20000008"));
 
-                        userRepo.save(new User(null, "darbinieks7", passwordEncoder.encode("test123"), "DARBINIEKS", true,
+                        userRepo.save(new User(null, "darbinieks7", passwordEncoder.encode(demoUserPassword), "DARBINIEKS", true,
                                 "Toms", "Avotiņš", "999999-99999", "20000009"));
 
-                        userRepo.save(new User(null, "darbinieks8", passwordEncoder.encode("test123"), "DARBINIEKS", true,
+                        userRepo.save(new User(null, "darbinieks8", passwordEncoder.encode(demoUserPassword), "DARBINIEKS", true,
                                 "Mikus", "Zariņš", "101010-10101", "20000010"));
                 }
 
@@ -208,6 +209,7 @@ public class PmeuUzskaitesSistemaApplication {
 
 
         };
+        
     }
 
     public static void main(String[] args) {
