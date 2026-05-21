@@ -518,6 +518,21 @@ function ManagerHomePage({ user, onLogout, setCurrentPage, onOpenShift }) {
                         <button
                             className="btn"
                             onClick={() => {
+                                const trimmedName = newEquipmentName.trim();
+
+                                if (!trimmedName) {
+                                    alert("Lūdzu, ievadiet ekipējuma nosaukumu.");
+                                    return;
+                                }
+
+                                const confirmed = window.confirm(
+                                    `Vai tiešām vēlaties pievienot jaunu ekipējumu: "${trimmedName}"?`
+                                );
+
+                                if (!confirmed) {
+                                    return;
+                                }
+
                                 fetch("http://localhost:8080/equipment-items", {
                                     method: "POST",
                                     headers: {
@@ -525,7 +540,7 @@ function ManagerHomePage({ user, onLogout, setCurrentPage, onOpenShift }) {
                                     },
                                     credentials: "include",
                                     body: JSON.stringify({
-                                        name: newEquipmentName
+                                        name: trimmedName
                                     })
                                 })
                                     .then((res) => res.json())
